@@ -21,8 +21,6 @@ namespace BussinessLayer
         public string ImageUrls { get; set; }
         public int GenreId { get; set; }
         public string Status { get; set; }
-
-        
         public virtual Genres Genre { get; set; }
         public virtual ICollection<Chapter> Chapters { get; set; } = new List<Chapter>();
         public virtual ICollection<Rate> Rates { get; set; } = new List<Rate>();
