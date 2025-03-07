@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    internal class GenreDAO : SingletonBase<GenreDAO>
+    public class GenreDAO : SingletonBase<GenreDAO>
     {
         public async Task<IEnumerable<Genres>> GetAllGenres()
         {
