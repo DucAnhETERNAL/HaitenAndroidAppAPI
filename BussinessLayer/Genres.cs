@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace BussinessLayer
 {
-    internal class Genres
+    public class Genres
     {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+
+        public ICollection<Manga> Mangas { get; set; }
     }
+
 }
