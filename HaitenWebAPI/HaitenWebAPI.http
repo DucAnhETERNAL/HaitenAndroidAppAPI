@@ -1,0 +1,6 @@
+@HaitenWebAPI_HostAddress = http://localhost:5202
+
+GET {{HaitenWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
