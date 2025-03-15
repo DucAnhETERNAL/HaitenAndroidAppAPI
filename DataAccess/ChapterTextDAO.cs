@@ -51,5 +51,10 @@ namespace DataAccess
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<ChapterText> GetByChapterId(int chapterId)
+        {
+            return await _context.ChapterTexts.Include(c=>c.Chapter)
+                .FirstOrDefaultAsync(c => c.ChapterId == chapterId);  // Fetch chapter text by ChapterId
+        }
     }
 }

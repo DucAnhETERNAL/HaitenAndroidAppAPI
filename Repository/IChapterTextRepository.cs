@@ -9,5 +9,6 @@ namespace Repository
 {
     public interface IChapterTextRepository : IRepositoryBase<ChapterText>
     {
+        Task<ChapterText> GetByChapterId(int chapterId);
     }
 }

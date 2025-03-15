@@ -17,7 +17,9 @@ namespace BussinessLayer
 
         public Manga Manga { get; set; }
         public ChapterText ChapterText { get; set; }
-        public ICollection<ChapterImages> ChapterImages { get; set; }
+        /*public ICollection<ChapterImages> ChapterImages { get; set; }*/
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
         public ICollection<ReadingHistory> ReadingHistories { get; set; }
     }
 

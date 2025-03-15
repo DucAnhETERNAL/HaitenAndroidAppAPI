@@ -18,6 +18,8 @@ namespace BussinessLayer
         public ICollection<UserMangaList> UserMangaLists { get; set; }
         public ICollection<ReadingHistory> ReadingHistories { get; set; }
         public ICollection<Rate> Rates { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
     }
 
 }

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace BussinessLayer.Migrations
 {
     /// <inheritdoc />
@@ -147,27 +149,6 @@ namespace BussinessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChapterImages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ChapterId = table.Column<int>(type: "int", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Position = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChapterImages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ChapterImages_Chapters_ChapterId",
-                        column: x => x.ChapterId,
-                        principalTable: "Chapters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ChapterTexts",
                 columns: table => new
                 {
@@ -183,6 +164,34 @@ namespace BussinessLayer.Migrations
                         name: "FK_ChapterTexts_Chapters_ChapterId",
                         column: x => x.ChapterId,
                         principalTable: "Chapters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ChapterId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Chapters_ChapterId",
+                        column: x => x.ChapterId,
+                        principalTable: "Chapters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -222,10 +231,66 @@ namespace BussinessLayer.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ChapterImages_ChapterId",
-                table: "ChapterImages",
-                column: "ChapterId");
+            migrationBuilder.InsertData(
+                table: "Genres",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Action" },
+                    { 2, "Adventure" },
+                    { 3, "Romance" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "Password", "Role", "Status", "UserName" },
+                values: new object[,]
+                {
+                    { 1, "user1@example.com", "password1", "User", "Active", "user1" },
+                    { 2, "admin1@example.com", "password2", "Admin", "Active", "admin1" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Mangas",
+                columns: new[] { "Id", "Author", "Description", "GenreId", "ImageUrls", "Status", "Title", "Type" },
+                values: new object[,]
+                {
+                    { 1, "Author 1", "Description for Manga 1", 1, "url1", "Active", "Manga 1", "Type 1" },
+                    { 2, "Author 2", "Description for Manga 2", 2, "url2", "Active", "Manga 2", "Type 2" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Chapters",
+                columns: new[] { "Id", "CreatedAt", "MangaId", "Name", "Status", "ViewCount" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "Chapter 1", true, 100 },
+                    { 2, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Chapter 1", true, 150 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Rates",
+                columns: new[] { "Id", "Comment", "CreatedAt", "MangaId", "Rating", "UserId" },
+                values: new object[] { 1, "Excellent!", new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 5, 1 });
+
+            migrationBuilder.InsertData(
+                table: "UserMangaLists",
+                columns: new[] { "Id", "AddedAt", "IsFavorite", "MangaId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1, 1 },
+                    { 2, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Comments",
+                columns: new[] { "Id", "ChapterId", "Content", "CreatedAt", "UserId" },
+                values: new object[] { 1, 1, "Great chapter!", new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 });
+
+            migrationBuilder.InsertData(
+                table: "ReadingHistories",
+                columns: new[] { "Id", "ChapterId", "MangaId", "ReadDate", "Status", "UserId" },
+                values: new object[] { 1, 1, 1, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Completed", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chapters_MangaId",
@@ -237,6 +302,16 @@ namespace BussinessLayer.Migrations
                 table: "ChapterTexts",
                 column: "ChapterId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_ChapterId",
+                table: "Comments",
+                column: "ChapterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mangas_GenreId",
@@ -283,10 +358,10 @@ namespace BussinessLayer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ChapterImages");
+                name: "ChapterTexts");
 
             migrationBuilder.DropTable(
-                name: "ChapterTexts");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Rates");

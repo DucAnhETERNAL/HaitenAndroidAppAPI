@@ -16,7 +16,14 @@ namespace DataAccess
                 .Include(r => r.Chapter)
                 .ToListAsync();
         }
-
+        public async Task<IEnumerable<ReadingHistory>> GetByUserId(int userId)
+        {
+            return await _context.ReadingHistories
+                .Where(rh => rh.UserId == userId)
+                .Include(rh => rh.Manga)
+                .Include(rh => rh.Chapter)
+                .ToListAsync();
+        }
         public async Task<ReadingHistory> GetHistoryById(int id)
         {
             return await _context.ReadingHistories
