@@ -24,6 +24,8 @@ namespace DataAccess
                 .Include(rh => rh.Chapter)
                 .ToListAsync();
         }
+      
+
         public async Task<ReadingHistory> GetHistoryById(int id)
         {
             return await _context.ReadingHistories

@@ -10,5 +10,6 @@ namespace Repository
     public interface IReadingHistoryRepository : IRepositoryBase<ReadingHistory>
     {
         Task<IEnumerable<ReadingHistory>> GetByUserId(int userId);
+       
     }
 }

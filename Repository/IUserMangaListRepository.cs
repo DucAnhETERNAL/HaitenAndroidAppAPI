@@ -9,5 +9,6 @@ namespace Repository
 {
     public interface IUserMangaListRepository : IRepositoryBase<UserMangaList>
     {
+        Task<IEnumerable<UserMangaList>> GetUserMangaList(int userId);
     }
 }

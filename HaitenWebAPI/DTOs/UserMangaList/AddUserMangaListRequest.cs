@@ -6,9 +6,6 @@
         public int MangaId { get; set; }  // ID của Manga
         public bool IsFavorite { get; set; }  // Đánh dấu manga yêu thích
 
-        public AddUserMangaListRequest()
-        {
-            IsFavorite = false;  // Mặc định không phải manga yêu thích
-        }
+        
     }
 }

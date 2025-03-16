@@ -58,7 +58,7 @@ namespace HaitenWebAPI.Controllers.ReadingHistoryDT
                 UserId = addReadingHistoryRequest.UserId,
                 MangaId = addReadingHistoryRequest.MangaId,
                 ChapterId = addReadingHistoryRequest.ChapterId,
-                Status = addReadingHistoryRequest.Status,
+                Status = "Đã Đọc",
                 ReadDate = addReadingHistoryRequest.ReadDate
             };
 
@@ -72,7 +72,7 @@ namespace HaitenWebAPI.Controllers.ReadingHistoryDT
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<ReadingHistoryDTO>>> GetReadingHistoryByUserId(int userId)
         {
-            // Fetch the reading history by userId
+            // Lấy lịch sử đọc theo userId
             var readingHistory = await _readingHistoryRepository.GetByUserId(userId);
 
             if (readingHistory == null || !readingHistory.Any())
@@ -80,16 +80,27 @@ namespace HaitenWebAPI.Controllers.ReadingHistoryDT
                 return NotFound("No reading history found for this user.");
             }
 
-            // Map the ReadingHistory entities to ReadingHistoryDTOs
-            var readingHistoryDto = readingHistory.Select(rh => new ReadingHistoryDTO
-            {
-                MangaId = rh.MangaId,
-                ChapterId = rh.ChapterId,
-                Status = rh.Status,
-                ReadDate = rh.ReadDate
-            }).ToList();
+            // Lấy tất cả các MangaId từ lịch sử đọc
+            var mangaIds = readingHistory.Select(rh => rh.MangaId).Distinct().ToList();
 
-            return Ok(readingHistoryDto);
+            // Lấy tất cả thông tin manga (bao gồm Title) cho tất cả các MangaId
+            var mangas = await _mangaRepository.GetByIds(mangaIds); // Giả sử bạn có phương thức GetByIds trong MangaRepository
+
+            // Tạo một dictionary để ánh xạ MangaId với Title
+            var mangaNames = mangas.ToDictionary(m => m.Id, m => m.Title);
+
+            // Nhóm lịch sử đọc theo MangaId và lấy Title từ dictionary
+            var groupedByManga = readingHistory
+                .GroupBy(rh => rh.MangaId)
+                .Select(group => new ReadingHistoryDTO
+                {
+                    MangaId = group.Key,
+                    MangaName = mangaNames.ContainsKey(group.Key) ? mangaNames[group.Key] : "Unknown", // Lấy MangaTitle từ dictionary
+                    ReadDate = group.Max(rh => rh.ReadDate) // Lấy ngày đọc mới nhất
+                }).ToList();
+
+            return Ok(groupedByManga);
         }
+
     }
 }
