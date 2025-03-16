@@ -1,4 +1,4 @@
-using Repository.Repo;
+﻿using Repository.Repo;
 using Repository;
 using Microsoft.AspNetCore.OData;
 
@@ -14,7 +14,12 @@ builder.Services.AddScoped<IRateRepository, RateRepository>();
 builder.Services.AddScoped<IReadingHistoryRepository, ReadingHistoryRepository>();
 builder.Services.AddScoped<IUserMangaListRepository, UserMangaListRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(8080); // Luôn lắng nghe trên cổng 8080
 
+
+});
 
 
 
