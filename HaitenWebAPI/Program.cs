@@ -15,14 +15,7 @@ builder.Services.AddScoped<IReadingHistoryRepository, ReadingHistoryRepository>(
 builder.Services.AddScoped<IUserMangaListRepository, UserMangaListRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(8080);  // Cổng HTTP
-    options.ListenAnyIP(443, listenOptions =>  // Cổng HTTPS
-    {
-        listenOptions.UseHttps();
-    });
-});
+
 
 
 // Add AutoMapper
