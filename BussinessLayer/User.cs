@@ -13,8 +13,9 @@ namespace BussinessLayer
         public string Password { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
-        public string Status { get; set; }
-
+        public string? Status { get; set; }
+        public string ?PaymentStatus { get; set; }
+        public decimal AmountPaid { get; set; }
         public ICollection<UserMangaList> UserMangaLists { get; set; }
         public ICollection<ReadingHistory> ReadingHistories { get; set; }
         public ICollection<Rate> Rates { get; set; }

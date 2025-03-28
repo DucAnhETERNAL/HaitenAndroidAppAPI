@@ -8,7 +8,7 @@ namespace DataAccess
 {
     public class ChapterImagesDAO : SingletonBase<ChapterImagesDAO>
     {
-       /* public async Task<IEnumerable<ChapterImages>> GetAllChapterImages()
+        public async Task<IEnumerable<ChapterImages>> GetAllChapterImages()
         {
             return await _context.ChapterImages
                 .Include(ci => ci.Chapter)
@@ -50,6 +50,6 @@ namespace DataAccess
                 _context.ChapterImages.Remove(chapterImage);
                 await _context.SaveChangesAsync();
             }
-        }*/
+        }
     }
 }

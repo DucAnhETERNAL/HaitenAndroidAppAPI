@@ -22,7 +22,7 @@ namespace BussinessObject
         public DbSet<Genres> Genres { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        /*public DbSet<ChapterImages> ChapterImages { get; set; }*/
+        public DbSet<ChapterImages> ChapterImages { get; set; }
         public DbSet<ChapterText> ChapterTexts { get; set; }
         public DbSet<Rate> Rates { get; set; }
         public DbSet<UserMangaList> UserMangaLists { get; set; }
@@ -68,11 +68,11 @@ namespace BussinessObject
                 .OnDelete(DeleteBehavior.Cascade);
 
             // One-to-Many: Chapter - ChapterImages (Cascade Delete)
-            /* modelBuilder.Entity<ChapterImages>()
-                 .HasOne(ci => ci.Chapter)
-                 .WithMany(c => c.ChapterImages)
-                 .HasForeignKey(ci => ci.ChapterId)
-                 .OnDelete(DeleteBehavior.Cascade);*/
+            modelBuilder.Entity<ChapterImages>()
+                .HasOne(ci => ci.Chapter)
+                .WithMany(c => c.ChapterImages)
+                .HasForeignKey(ci => ci.ChapterId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // One-to-Many: User - ReadingHistory (Cascade Delete)
             modelBuilder.Entity<ReadingHistory>()

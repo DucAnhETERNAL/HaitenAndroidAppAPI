@@ -10,7 +10,7 @@ namespace Repository.Repo
 {
     public class ChapterImagesRepository 
     {
-      /*  private readonly ChapterImagesDAO _chapterImagesDAO = ChapterImagesDAO.Instance;
+        private readonly ChapterImagesDAO _chapterImagesDAO = ChapterImagesDAO.Instance;
 
         public async Task<IEnumerable<ChapterImages>> GetAll() => await _chapterImagesDAO.GetAllChapterImages();
 
@@ -20,6 +20,6 @@ namespace Repository.Repo
 
         public async Task Update(ChapterImages chapterImage) => await _chapterImagesDAO.Update(chapterImage);
 
-        public async Task Delete(int id) => await _chapterImagesDAO.Delete(id);*/
+        public async Task Delete(int id) => await _chapterImagesDAO.Delete(id);
     }
 }
