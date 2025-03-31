@@ -2,6 +2,7 @@
 using BussinessLayer;
 using Google.Apis.Auth;
 using HaitenWebAPI.DTOs.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.SqlServer.Server;
@@ -82,6 +83,33 @@ namespace HaitenWebAPI.Controllers.Authen
                 return StatusCode(500, new { success = false, message = "An error occurred: " + ex.Message });
             }
         }
+        [Authorize] 
+        [HttpGet("profile")]
+        public IActionResult GetUserProfile()
+        {
+            // Lấy thông tin người dùng từ claim trong token
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;  // Lấy UserId từ token
+            var userName = User.FindFirst(ClaimTypes.Name)?.Value;  // Lấy UserName từ token
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;  // Lấy Email từ token
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  // Lấy Role từ token
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "User not found in token" });
+            }
+
+            // Bạn có thể sử dụng thông tin này để lấy thêm dữ liệu người dùng từ cơ sở dữ liệu nếu cần
+            var user = new 
+            {
+                Id = userId,
+                UserName = userName,
+                Email = userEmail,
+                Role = userRole
+            };
+
+            return Ok(user);
+        }
+
         private string GenerateToken(User user)
         {
             var claims = new List<Claim>
