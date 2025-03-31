@@ -6,50 +6,59 @@ using BussinessObject;
 
 namespace DataAccess
 {
-    public class ChapterImagesDAO : SingletonBase<ChapterImagesDAO>
+    public class ChapterImagesDAO 
     {
-        public async Task<IEnumerable<ChapterImages>> GetAllChapterImages()
+        private readonly PRMDbContext _context;
+
+        public ChapterImagesDAO(PRMDbContext context)
         {
-            return await _context.ChapterImages
-                .Include(ci => ci.Chapter)
-                .ToListAsync();
+            _context = context;
         }
 
-        public async Task<ChapterImages> GetChapterImageById(int id)
+        public async Task<List<ChapterImages>> AddMultipleAsync(List<ChapterImages> images)
         {
-            return await _context.ChapterImages
-                .Include(ci => ci.Chapter)
-                .FirstOrDefaultAsync(ci => ci.Id == id);
+            await _context.ChapterImages.AddRangeAsync(images);
+            await _context.SaveChangesAsync();
+            return images;
         }
-
-        public async Task Add(ChapterImages chapterImage)
+        public async Task AddChapterImageAsync(ChapterImages chapterImage)
         {
-            _context.ChapterImages.Add(chapterImage);
+            await _context.ChapterImages.AddAsync(chapterImage);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(ChapterImages chapterImage)
+        public async Task<Chapter> FindChapterByIdAsync(int chapterId)
         {
-            var existingChapterImage = await GetChapterImageById(chapterImage.Id);
-            if (existingChapterImage != null)
-            {
-                _context.Entry(existingChapterImage).CurrentValues.SetValues(chapterImage);
-            }
-            else
-            {
-                _context.ChapterImages.Add(chapterImage);
-            }
-            await _context.SaveChangesAsync();
+            return await _context.Chapters.FindAsync(chapterId);
         }
 
-        public async Task Delete(int id)
+
+        public async Task<ChapterImages> GetByIdAsync(int id)
         {
-            var chapterImage = await GetChapterImageById(id);
-            if (chapterImage != null)
+            return await _context.ChapterImages.FindAsync(id);
+        }
+
+        public async Task<List<ChapterImages>> GetAllAsync()
+        {
+            return await _context.ChapterImages.ToListAsync();
+        }
+
+        public async Task<List<ChapterImages>> GetImagesByChapterIdAsync(int chapterId)
+        {
+            return await _context.ChapterImages.Where(ci => ci.ChapterId == chapterId).ToListAsync();
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var image = await _context.ChapterImages.FindAsync(id);
+            if (image != null)
             {
-                _context.ChapterImages.Remove(chapterImage);
+                _context.ChapterImages.Remove(image);
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
+
     }
 }

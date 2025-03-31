@@ -5,6 +5,12 @@ using Net.payOS;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using BussinessObject;
+using DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Repository;
+using Repository.Repo;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add Scoped services for each repository
@@ -51,8 +57,17 @@ builder.Services.AddControllers().AddOData(opt => opt.Select().Filter().OrderBy(
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<PRMDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+builder.Services.AddScoped<ChapterImagesDAO>();
+builder.Services.AddScoped<IChapterImagesRepository, ChapterImagesRepository>();
+
+
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

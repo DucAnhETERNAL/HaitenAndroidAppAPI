@@ -10,16 +10,37 @@ namespace Repository.Repo
 {
     public class ChapterImagesRepository 
     {
-        private readonly ChapterImagesDAO _chapterImagesDAO = ChapterImagesDAO.Instance;
+        private readonly ChapterImagesDAO _chapterImagesDAO;
 
-        public async Task<IEnumerable<ChapterImages>> GetAll() => await _chapterImagesDAO.GetAllChapterImages();
+        public ChapterImagesRepository(ChapterImagesDAO chapterImagesDAO)
+        {
+            _chapterImagesDAO = chapterImagesDAO;
+        }
 
-        public async Task<ChapterImages> GetById(int id) => await _chapterImagesDAO.GetChapterImageById(id);
+        public async Task<List<ChapterImages>> AddMultipleImagesAsync(List<ChapterImages> images)
+        {
+            return await _chapterImagesDAO.AddMultipleAsync(images);
+        }
+    
 
-        public async Task Add(ChapterImages chapterImage) => await _chapterImagesDAO.Add(chapterImage);
+        public async Task<List<ChapterImages>> GetImagesByChapterIdAsync(int chapterId)
+        {
+            return await _chapterImagesDAO.GetImagesByChapterIdAsync(chapterId);
+        }
 
-        public async Task Update(ChapterImages chapterImage) => await _chapterImagesDAO.Update(chapterImage);
+        public async Task<bool> DeleteImageAsync(int id)
+        {
+            return await _chapterImagesDAO.DeleteAsync(id);
+        }
+        public async Task AddChapterImageAsync(ChapterImages chapterImage)
+        {
+            await _chapterImagesDAO.AddChapterImageAsync(chapterImage);
+        }   
 
-        public async Task Delete(int id) => await _chapterImagesDAO.Delete(id);
+        public async Task<Chapter> FindChapterByIdAsync(int chapterId)
+        {
+            return await _chapterImagesDAO.FindChapterByIdAsync(chapterId);
+        }
+
     }
 }
