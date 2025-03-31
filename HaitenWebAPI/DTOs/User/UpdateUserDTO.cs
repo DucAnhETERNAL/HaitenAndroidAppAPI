@@ -2,9 +2,7 @@
 {
     public class UpdateUserDTO
     {
-       
-       
-        public string Role { get; set; }  
-        public string Status { get; set; }  
+        public string? PaymentStatus { get; set; }
+        public decimal AmountPaid { get; set; }
     }
 }

@@ -8,9 +8,6 @@ namespace DataAccess
 {
     public class UserDAO :SingletonBase<UserDAO>
     {
-       
-
-        
 
         // Lấy danh sách tất cả người dùng
         public async Task<IEnumerable<User>> GetAllUsers()
