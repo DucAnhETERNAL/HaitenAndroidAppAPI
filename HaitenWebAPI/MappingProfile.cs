@@ -54,6 +54,11 @@ namespace HaitenWebAPI
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.GenreId, opt => opt.MapFrom(src => src.GenreId))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+
+            CreateMap<UpdateUserDTO, User>()
+            .ForMember(dest => dest.PaymentStatus, opt => opt.MapFrom(src => src.PaymentStatus))
+            .ForMember(dest => dest.AmountPaid, opt => opt.MapFrom(src => src.AmountPaid))
+            .ReverseMap();
         }
 
     }

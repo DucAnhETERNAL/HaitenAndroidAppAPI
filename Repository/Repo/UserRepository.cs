@@ -1,5 +1,6 @@
 ﻿using BussinessLayer;
 using DataAccess;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +30,18 @@ namespace Repository.Repo
         public async Task<IEnumerable<User>> GetUsersByRole(string role) => await _userDAO.GetUsersByRole(role);
 
         public async Task<int> GetUserCount() => await _userDAO.GetUserCount();
+        public async Task UpdatePaymentStatus(int userId, string paymentStatus, decimal amountPaid)
+        {
+            // Gọi UserDAO để cập nhật
+            var user = await _userDAO.GetUserById(userId);
+            if (user != null)
+            {
+                user.PaymentStatus = paymentStatus;
+                user.AmountPaid = amountPaid;
+
+                // Cập nhật thông tin người dùng
+                await _userDAO.Update(user);
+            }
+        }
     }
 }
