@@ -8,9 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using BussinessObject;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
-using Repository;
-using Repository.Repo;
-using System;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Add Scoped services for each repository
@@ -24,6 +22,7 @@ builder.Services.AddScoped<IRateRepository, RateRepository>();
 builder.Services.AddScoped<IReadingHistoryRepository, ReadingHistoryRepository>();
 builder.Services.AddScoped<IUserMangaListRepository, UserMangaListRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IChapterImagesRepository, ChapterImagesRepository>();
 
 builder.Services.AddSingleton(new PayOS("295a3346-3eeb-449c-bb7b-cdbf495577ec", "a5e3d88f-3ae6-4235-b30e-e81c2b3686a2", "2a895d2b7938d4880973602f579a44043a2bc63183aa80e685ace2e9164cab5f"));
 builder.Services.AddCors(options =>
@@ -61,7 +60,7 @@ builder.Services.AddDbContext<PRMDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 builder.Services.AddScoped<ChapterImagesDAO>();
-builder.Services.AddScoped<IChapterImagesRepository, ChapterImagesRepository>();
+
 
 
 

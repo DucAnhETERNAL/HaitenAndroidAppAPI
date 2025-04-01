@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repo
 {
-    public class ChapterImagesRepository 
+    public class ChapterImagesRepository : IChapterImagesRepository
     {
         private readonly ChapterImagesDAO _chapterImagesDAO;
 
