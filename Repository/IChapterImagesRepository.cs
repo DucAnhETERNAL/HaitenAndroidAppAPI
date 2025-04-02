@@ -12,6 +12,9 @@ namespace Repository
         void AddChapterImage(ChapterImages chapterImage);
         Chapter FindChapterById(int chapterId);
         List<ChapterImages> GetImagesByChapterId(int chapterId);
+        ChapterImages GetChapterImageById(int id);
+        void UpdateChapterImage(ChapterImages chapterImage);
+        void DeleteChapterImage(int id);
 
     }
 }

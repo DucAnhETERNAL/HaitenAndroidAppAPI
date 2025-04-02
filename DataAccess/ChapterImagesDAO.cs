@@ -32,6 +32,26 @@ namespace DataAccess
                 .OrderBy(ci => ci.Position) // Sắp xếp theo Position từ thấp đến cao
                 .ToList();
         }
+        public ChapterImages GetChapterImageById(int id)
+        {
+            return _dbContext.ChapterImages.Find(id);
+        }
+
+        public void UpdateChapterImage(ChapterImages chapterImage)
+        {
+            _dbContext.ChapterImages.Update(chapterImage);
+            _dbContext.SaveChanges();
+        }
+
+        public void DeleteChapterImage(int id)
+        {
+            var chapterImage = _dbContext.ChapterImages.Find(id);
+            if (chapterImage != null)
+            {
+                _dbContext.ChapterImages.Remove(chapterImage);
+                _dbContext.SaveChanges();
+            }
+        }
 
     }
 }

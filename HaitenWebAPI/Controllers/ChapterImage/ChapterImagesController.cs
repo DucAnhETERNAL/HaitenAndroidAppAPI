@@ -94,6 +94,77 @@ namespace HaitenWebAPI.Controllers.ChapterImage
 
             return Ok(new { message = "✅ Upload thành công!", url = newChapterImage.ImageUrl, position = newChapterImage.Position });
         }
+        [HttpPut]
+        [Route("updateImage")] //https://localhost:7016/api/chapterimages/updateImage?Id=2
+        public async Task<IActionResult> UpdateImage([FromQuery] int Id, [FromForm] IFormFile Image)
+        {
+            if (Id <= 0)
+            {
+                return BadRequest("❌ Lỗi: Id không hợp lệ!");
+            }
+
+            var existingImage = _chapterImagesRepository.GetChapterImageById(Id);
+            if (existingImage == null)
+            {
+                return NotFound($"❌ Không tìm thấy hình ảnh với Id = {Id}");
+            }
+
+            if (Image == null || Image.Length == 0)
+            {
+                return BadRequest("❌ Lỗi: File không hợp lệ!");
+            }
+
+            // Xóa file cũ nếu có
+            var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot_1", existingImage.ImageUrl.TrimStart('/'));
+            if (System.IO.File.Exists(oldPath))
+            {
+                System.IO.File.Delete(oldPath);
+            }
+
+            // Lưu file mới
+            var fileName = Path.GetFileName(Image.FileName);
+            var newPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot_1", "images", fileName);
+            using (var stream = new FileStream(newPath, FileMode.Create))
+            {
+                await Image.CopyToAsync(stream);
+            }
+
+            // Cập nhật URL ảnh mới
+            existingImage.ImageUrl = "/images/" + fileName;
+            _chapterImagesRepository.UpdateChapterImage(existingImage);
+
+            return Ok(new { message = "✅ Cập nhật hình ảnh thành công!", url = existingImage.ImageUrl });
+        }
+
+
+        [HttpDelete]
+        [Route("deleteImage")] //https://localhost:7016/api/chapterimages/deleteImage?id=2
+        public IActionResult DeleteImage([FromQuery] int Id)
+        {
+            if (Id <= 0)
+            {
+                return BadRequest("❌ Lỗi: Id không hợp lệ!");
+            }
+
+            var existingImage = _chapterImagesRepository.GetChapterImageById(Id);
+            if (existingImage == null)
+            {
+                return NotFound($"❌ Không tìm thấy hình ảnh với Id = {Id}");
+            }
+
+            // Xóa file vật lý
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot_1", existingImage.ImageUrl.TrimStart('/'));
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+
+            // Xóa ảnh khỏi database
+            _chapterImagesRepository.DeleteChapterImage(Id);
+
+            return Ok(new { message = "✅ Xóa hình ảnh thành công!" });
+        }
+
 
     }
 }

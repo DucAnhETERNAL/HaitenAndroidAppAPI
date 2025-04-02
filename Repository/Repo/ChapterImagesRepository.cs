@@ -30,7 +30,20 @@ namespace Repository.Repo
         {
             return _chapterImagesDAO.GetImagesByChapterId(chapterId);
         }
+        public ChapterImages GetChapterImageById(int id)
+        {
+            return _chapterImagesDAO.GetChapterImageById(id);
+        }
 
-      
+        public void UpdateChapterImage(ChapterImages chapterImage)
+        {
+            _chapterImagesDAO.UpdateChapterImage(chapterImage);
+        }
+
+        public void DeleteChapterImage(int id)
+        {
+            _chapterImagesDAO.DeleteChapterImage(id);
+        }
+
     }
 }
