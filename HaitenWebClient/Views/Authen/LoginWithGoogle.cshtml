@@ -94,8 +94,8 @@
             // Lưu JWT token vào localStorage
             localStorage.setItem('jwtToken', data.jwtToken);
 
-            // Chuyển hướng người dùng sau khi đăng nhập thành công
-            window.location.href = '/home';  // Chuyển hướng đến trang chính (hoặc trang bạn muốn)
+            
+            window.location.href = '/home';  
         } else {
             alert('Đăng nhập thất bại: ' + (data.message || 'Có lỗi xảy ra'));
         }

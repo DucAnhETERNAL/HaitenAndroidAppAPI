@@ -8,11 +8,11 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(response => {
                 // Lấy thông tin người dùng từ phản hồi
                 const userName = response.userName;
-
+                const role = response.role;
                 // Hiển thị tên người dùng trong dropdown
                 const userInfoNav = document.getElementById("userInfoNav");
                 const loginNav = document.getElementById("loginNav");
-
+                const adminButton = document.getElementById("adminButton"); 
                 if (userInfoNav && loginNav) {
                     userInfoNav.style.display = "block";
                     loginNav.style.display = "none";
@@ -20,7 +20,17 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Cập nhật tên người dùng
                     const userDropdown = document.getElementById("userDropdown");
                     userDropdown.textContent = userName;
-                    
+                    if (role === "Admin") {
+                        // Hiển thị nút quản lý cho admin
+                        if (adminButton) {
+                            adminButton.style.display = "block";  // Hiển thị nút quản lý
+                        }
+                    } else {
+                        // Ẩn nút quản lý nếu không phải admin
+                        if (adminButton) {
+                            adminButton.style.display = "none";
+                        }
+                    }
                 }
             })
             .catch(error => {
