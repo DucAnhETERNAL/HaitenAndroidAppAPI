@@ -61,4 +61,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (logoutButton) {
         logoutButton.addEventListener("click", handleLogout);
     }
+
+    const payButton = document.getElementById("paybutton");
+    if (payButton) {
+        payButton.addEventListener("click", function () {
+            // Redirect to payment page when "Đăng ký hội viên" button is clicked
+            window.location.href = "Payment/Payments";  // Đảm bảo URL này là đúng với route thanh toán của bạn
+        });
+    }
 });

@@ -23,43 +23,43 @@
             box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .payment-container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
+            .payment-container h2 {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #333;
+            }
 
-        .payment-container label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
+            .payment-container label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: #333;
+            }
 
-        .payment-container input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+            .payment-container input[type="number"] {
+                width: 100%;
+                padding: 12px;
+                margin: 10px 0;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 16px;
+            }
 
-        .payment-container button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+            .payment-container button {
+                width: 100%;
+                padding: 12px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 18px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
 
-        .payment-container button:hover {
-            background-color: #0056b3;
-        }
+                .payment-container button:hover {
+                    background-color: #0056b3;
+                }
 
         .payment-status {
             margin-top: 20px;
@@ -67,15 +67,15 @@
             display: none;
         }
 
-        .payment-status a {
-            color: #007bff;
-            font-size: 18px;
-            text-decoration: none;
-        }
+            .payment-status a {
+                color: #007bff;
+                font-size: 18px;
+                text-decoration: none;
+            }
 
-        .payment-status a:hover {
-            text-decoration: underline;
-        }
+                .payment-status a:hover {
+                    text-decoration: underline;
+                }
     </style>
 </head>
 <body>
@@ -84,16 +84,14 @@
         <h2>Thanh toán</h2>
 
         <form id="paymentForm">
-            <div>
-                <label for="userId">User ID:</label>
-                <input type="number" id="userId" name="userId" required placeholder="Nhập User ID">
-            </div>
+            <!-- Ẩn User ID và chỉ hiển thị số tiền -->
+            <input type="hidden" id="userId" name="userId" required>
+
             <div>
                 <label for="amount">Số tiền:</label>
                 <input type="number" id="amount" name="amount" value="10000" required readonly>
             </div>
             <button type="submit" id="paymentBtn">Thanh toán</button>
-            
         </form>
 
         <div class="payment-status" id="paymentStatus">
@@ -105,6 +103,20 @@
 
     <script>
         $(document).ready(function() {
+            // Lấy JWT từ localStorage
+            const jwtToken = localStorage.getItem("jwtToken");
+            if (jwtToken) {
+                // Giải mã JWT để lấy userId
+                const payload = JSON.parse(atob(jwtToken.split('.')[1])); // Giải mã payload từ JWT
+                const userId = payload.userId; // Giả sử `userId` lưu trong payload
+
+                // Điền thông tin vào form (userId sẽ không hiển thị cho người dùng)
+                $('#userId').val(userId);
+            } else {
+                // Nếu không có JWT, có thể redirect đến trang đăng nhập
+                window.location.href = '/login';
+            }
+
             // Xử lý form submit
             $('#paymentForm').on('submit', function(event) {
                 event.preventDefault();
@@ -133,5 +145,6 @@
             });
         });
     </script>
+
 </body>
 </html>
