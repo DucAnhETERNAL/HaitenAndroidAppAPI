@@ -22,10 +22,18 @@ namespace BussinessLayer
         public int GenreId { get; set; }
         public string Status { get; set; }
         public virtual Genres Genre { get; set; }
+
+        //public virtual ICollection<Genres> Genres { get; set; } = new List<Genres>();
+
         public virtual ICollection<Chapter> Chapters { get; set; } = new List<Chapter>();
+
+
+
         public virtual ICollection<Rate> Rates { get; set; } = new List<Rate>();
         public virtual ICollection<UserMangaList> UserMangaLists { get; set; } = new List<UserMangaList>();
         public virtual ICollection<ReadingHistory> ReadingHistories { get; set; } = new List<ReadingHistory>(); // ✅ Thêm dòng này
+        //public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>(); // ✅ Thêm dòng này
+
     }
 
 

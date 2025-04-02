@@ -26,6 +26,8 @@ namespace HaitenWebAPI.Controllers
             _mapper = mapper;
         }
 
+
+
         [HttpGet("{chapterId}")]
         public async Task<ActionResult<ChapterTextDTO>> GetChapterTextByChapterId(int chapterId)
         {

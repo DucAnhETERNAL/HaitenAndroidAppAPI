@@ -3,6 +3,7 @@ using BussinessLayer;
 using HaitenWebAPI.DTOs.Chapter;
 using HaitenWebAPI.DTOs.ChapterText;
 using HaitenWebAPI.DTOs.Comment;
+using HaitenWebAPI.DTOs.Genres;
 using HaitenWebAPI.DTOs.Manga;
 using HaitenWebAPI.DTOs.User;
 using HaitenWebAPI.DTOs.UserMangaList;
@@ -11,10 +12,11 @@ namespace HaitenWebAPI
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile() {
+        public MappingProfile()
+        {
 
             CreateMap<User, LoginDTO>()
-                .ForMember(dest => dest.UserNameOrEmail, opt => opt.MapFrom(src => src.UserName)) 
+                .ForMember(dest => dest.UserNameOrEmail, opt => opt.MapFrom(src => src.UserName))
                 .ReverseMap();
             CreateMap<User, RegisterDTO>()
                 .ReverseMap();
@@ -29,7 +31,10 @@ namespace HaitenWebAPI
             .ForMember(dest => dest.GenreName, opt => opt.MapFrom(src => src.Genre.Name))
             .ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.Rates.Any() ? src.Rates.Average(r => r.Rating) : 0));
             CreateMap<Manga, MangaDTO>()
-            .ForMember(dest => dest.Chapters, opt => opt.MapFrom(src => src.Chapters));
+            .ForMember(dest => dest.Chapters, opt => opt.MapFrom(src => src.Chapters))
+            .ForMember(dest => dest.Genres, opt => opt.MapFrom(src =>
+                src.Genre != null ? new List<GenresDTO> { new GenresDTO { Name = src.Genre.Name } } : new List<GenresDTO>()));
+
             CreateMap<Chapter, ChapterDTO>();
             CreateMap<Chapter, ChapterListDTO>();
             CreateMap<ChapterText, ChapterTextDTO>()
