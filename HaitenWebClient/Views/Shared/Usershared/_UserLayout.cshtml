@@ -16,6 +16,8 @@
 
     <!-- Css Styles -->
     <!-- Css Styles -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
@@ -61,8 +63,31 @@
                 </div>
                 <div class="col-lg-2">
                     <div class="header__right">
-                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                        <a href="./login.html"><span class="icon_profile"></span></a>
+                      
+                        
+                       
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown" id="userInfoNav" style="display: none;">
+                                <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="userDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i> Loading...
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    
+                                    <li>
+                                        <button id="logoutButton" class="dropdown-item">Đăng xuất</button>
+                                    </li>
+                                    <li id="adminButton" style="display: none;">
+                                        <button class="dropdown-item" onclick="window.location.href='@Url.Action("Index", "Admin")'">Quản lý</button>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item" id="loginNav">
+                                <a class="icon_profile" asp-controller="Authen" asp-action="NewGGlogin"></a>
+                            </li>
+
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -114,6 +139,7 @@
     <script src="/js/jquery.slicknav.js"></script>
     <script src="/js/owl.carousel.min.js"></script>
     <script src="/js/main.js"></script>
+    <script src="~/js/Layout/Layout.js" type="module"> </script>
 </body>
 
 

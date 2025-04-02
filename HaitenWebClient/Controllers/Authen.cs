@@ -12,5 +12,9 @@ namespace HaitenWebClient.Controllers
         {
             return View();
         }
+        public IActionResult NewGGlogin()
+        {
+            return View();
+        }
     }
 }
