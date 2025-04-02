@@ -13,12 +13,5 @@ namespace Repository
         Chapter FindChapterById(int chapterId);
         List<ChapterImages> GetImagesByChapterId(int chapterId);
 
-        //    Task<IEnumerable<ChapterImages>> GetAll();  // Lấy tất cả ChapterImages
-        //    Task<ChapterImages> GetById(int id);  // Lấy ChapterImage theo ID
-        //    Task Add(ChapterImages chapterImage);  // Thêm ChapterImage mới
-        //    Task Update(ChapterImages chapterImage);  // Cập nhật ChapterImage
-        //    Task Delete(int id);  // Xóa ChapterImage
-        //    Task<Chapter> FindChapterByIdAsync(int chapterId);  // Tìm Chapter theo ID
-        //
     }
 }

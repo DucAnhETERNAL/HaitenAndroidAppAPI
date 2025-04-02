@@ -15,6 +15,20 @@ namespace HaitenWebAPI.Controllers.ChapterImage
         {
             _chapterImagesRepository = chapterImagesRepository;
         }
+        [HttpGet]
+        [Route("getImagesByChapter")]
+        public IActionResult GetImagesByChapter(int chapterId)
+        {
+            var images = _chapterImagesRepository.GetImagesByChapterId(chapterId);
+
+            if (images == null || images.Count == 0)
+            {
+                return NotFound($"❌ Không tìm thấy hình ảnh cho ChapterId = {chapterId}");
+            }
+
+            return Ok(images);
+        }
+
 
         [HttpPost]
         [Route("uploadfile")]

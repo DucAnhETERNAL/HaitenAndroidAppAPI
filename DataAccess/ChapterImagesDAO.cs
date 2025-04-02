@@ -25,9 +25,12 @@ namespace DataAccess
         {
             return _dbContext.Chapters.Find(chapterId);
         }
-        public List<ChapterImages> GetImagesByChapterId(int chapterId)
+        public List<ChapterImages> GetImagesByChapterId(int chapterId) // ✅ Thêm phương thức mới
         {
-            return _dbContext.ChapterImages.Where(ci => ci.ChapterId == chapterId).ToList();
+            return _dbContext.ChapterImages
+                .Where(ci => ci.ChapterId == chapterId)
+                .OrderBy(ci => ci.Position) // Sắp xếp theo Position từ thấp đến cao
+                .ToList();
         }
 
     }
