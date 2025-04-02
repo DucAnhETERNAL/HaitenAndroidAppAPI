@@ -41,10 +41,12 @@
         <span class="close" onclick="closeAddMangaModal()">&times;</span>
         <h3 class="modal-title">Thêm Manga mới</h3>
         <form id="addMangaForm">
+
             <div class="form-group">
                 <label for="genre">Thể loại:</label>
                 <select id="genre" class="form-control" required></select>
             </div>
+
 
             <div class="form-group">
                 <label for="mangaTitle">Tên Manga:</label>
@@ -68,11 +70,56 @@
                     <option value="Inactive">Inactive</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label for="type">Loại Manga:</label>
+                <input type="text" id="type" class="form-control" required>
+            </div>
 
             <button type="button" class="btn btn-primary mt-3" onclick="handleAddManga()">Thêm</button>
         </form>
     </div>
 </div>
+<!-- Modal Chỉnh sửa Manga -->
+<div id="editMangaModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditMangaModal()">&times;</span>
+        <h3 class="modal-title">Chỉnh sửa Manga</h3>
+        <form id="editMangaForm">
+            <input type="hidden" id="editMangaId" />
+            <div class="form-group">
+                <label for="editGenre">Thể loại:</label>
+                <select id="editGenre" class="form-control" required></select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="editMangaTitle">Tên Manga:</label>
+                <input type="text" id="editMangaTitle" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editAuthor">Tác giả:</label>
+                <input type="text" id="editAuthor" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editDescription">Mô tả:</label>
+                <textarea id="editDescription" class="form-control" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="editStatus">Trạng thái:</label>
+                <select id="editStatus" class="form-control" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-primary mt-3" onclick="handleEditManga()">Lưu</button>
+        </form>
+    </div>
+</div>
+
 
 <link rel="stylesheet" href="/css/modal.css">
 <script type="module" src="/js/Manga/Manga.js"></script>
