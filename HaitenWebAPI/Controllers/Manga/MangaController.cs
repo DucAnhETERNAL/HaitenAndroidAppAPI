@@ -35,7 +35,7 @@ namespace HaitenWebAPI.Controllers.MangaDT
         }
         [HttpGet]
         [EnableQuery]
-        public async Task<ActionResult<IQueryable<MangaListDTO>>> GetAll()
+        public async Task<ActionResult<IQueryable<MangaListDTO>>> GetAll()  
         {
             var ListManga = await _mangaRepository.GetAll();
             var ListMangaDto = ListManga.Select(manga => _mapper.Map<MangaListDTO>(manga));
@@ -43,10 +43,13 @@ namespace HaitenWebAPI.Controllers.MangaDT
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<MangaDTO>> GetDetailAndChapterList(int id, [FromQuery] int userId)
+        public async Task<ActionResult<MangaDTO>> GetDetailAndChapterList(int? id, [FromQuery] int userId)
         {
+
+            // Nếu id không được truyền vào, mặc định là 1
+            int mangaId = id ?? 1;
             // Lấy thông tin manga theo id
-            var manga = await _mangaRepository.GetById(id); // Giả sử GetById lấy manga và các chapter của nó
+            var manga = await _mangaRepository.GetById(mangaId); // Giả sử GetById lấy manga và các chapter của nó
 
             if (manga == null)
             {

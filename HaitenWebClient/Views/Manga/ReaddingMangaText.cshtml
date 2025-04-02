@@ -1,6 +1,160 @@
 ﻿@{
     Layout = "Usershared/_UserLayout";
+
+
+
+    
 }
+
+<style>
+    body {
+        color: white;
+    }
+
+    h2, p, a {
+        color: white !important;
+    }
+
+   
+    input, textarea {
+        color: white !important;
+        background-color: #333 !important;
+        border: 1px solid white !important;
+    }
+
+    .site-btn {
+        background-color: white !important;
+        color: black !important;
+    }
+
+    .btn-light {
+        background-color: white !important;
+        color: black !important;
+        text-decoration: none !important;
+    }
+
+        .btn-light:hover {
+            background-color: white !important;
+            color: black !important;
+        }
+</style>
+
+<form method="get" action="@Url.Action("ReaddingMangaText", "Manga")">
+    <div class="container d-flex justify-content-center mt-4">
+        <div class="card shadow-lg" style="width: 80%; max-width: 600px;">
+            <div class="card-header text-center bg-primary text-white">
+                <h4>Danh sách Chương</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush text-center">
+                    @if (ViewData["MangaChapters"] is List<HaitenWebAPI.DTOs.Chapter.ChapterDTO> chapters)
+
+
+
+                    {
+                        @foreach (var chapter in chapters)
+
+
+
+                        {
+                            <li class="list-group-item">
+                                <a href="@Url.Action("ReaddingMangaText", "Manga", new { chapterId = chapter.Id })"
+                                   class="text-decoration-none text-primary fw-bold">
+                                    @chapter.Name
+                                </a>
+                            </li>
+                        }
+                    }
+
+
+
+                    else
+
+
+
+                    {
+                        <li class="list-group-item text-danger">Không có chương nào.</li>
+                    }
+                </ul>
+            </div>
+
+            <div class="card-footer text-center">
+                @if (ViewData["PreviousChapter"] != null)
+
+
+
+                {
+                    var previousChapter = (HaitenWebAPI.DTOs.Chapter.ChapterDTO)ViewData["PreviousChapter"];
+                    <button type="submit" class="btn btn-outline-primary me-2" name="chapterId" value="@previousChapter.Id">◀ Chương Trước</button>
+                }
+
+
+
+                else
+
+
+
+                {
+                    <button type="submit" class="btn btn-outline-primary me-2" disabled>◀ Chương Trước</button>
+                }
+
+                <!-- Hiển thị Chương hiện tại ở giữa -->
+                @if (ViewData["CurrentChapter"] != null)
+
+
+
+                {
+                    var currentChapter = (HaitenWebAPI.DTOs.Chapter.ChapterDTO)ViewData["CurrentChapter"];
+                    <span class="btn btn-outline-primary"> @currentChapter.Name</span>
+                }
+
+                @if (ViewData["NextChapter"] != null)
+
+
+
+                {
+                    var nextChapter = (HaitenWebAPI.DTOs.Chapter.ChapterDTO)ViewData["NextChapter"];
+                    <button type="submit" class="btn btn-outline-primary" name="chapterId" value="@nextChapter.Id">Chương Sau ▶</button>
+                }
+
+
+
+                else
+
+
+
+                {
+                    <button type="submit" class="btn btn-outline-primary" disabled>Chương Sau ▶</button>
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<!-- Reading Manga Section Begin -->
+<section class="manga-reading spad">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-8">
+                <div class="manga__details__title">
+                    <h2 style="text-align: center;">@Model.ChapterName</h2>
+                </div>
+                <div class="manga__details__content">
+                    <p>@Model.Content</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
 <!-- Blog Details Section Begin -->
 <section class="blog-details spad">
     <div class="container">
