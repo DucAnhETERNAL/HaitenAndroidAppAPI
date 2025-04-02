@@ -1,24 +1,99 @@
 ﻿@{
     Layout = "Usershared/_UserLayout";
 }
-<div class="login__social">
-    <div class="row d-flex justify-content-center">
-        <div class="col-lg-6">
-            <div class="login__social__links">
-                <span>or</span>
-                <ul>
-                    <li>
-                        <a href="#" class="facebook">
-                            <i class="fa fa-facebook"></i> Sign in With
-                            Facebook
-                        </a>
-                    </li>
-                    <li><a href="#" class="google"><i class="fa fa-google"></i> Sign in With Google</a></li>
-                    <li>
-                        <a href="#" class="twitter"><i class="fa fa-twitter"></i> Sign in With Twitter</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .login-container {
+        text-align: center;
+    }
+
+    .g_id_signin {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #8000ff;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        border: none;
+        /* Sử dụng flex để căn giữa nội dung */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 300px;
+        height: 40px; /* Đảm bảo chiều cao nút */
+        text-align: center; /* Đảm bảo chữ canh giữa */
+    }
+
+        .g_id_signin:hover {
+            background-color: #9b00ff;
+        }
+</style>
+<!-- Place your login content here -->
+<div class="login__social" style="margin-bottom: 200px">
+    
+            
+                <!-- Google Sign-In integration -->
+                <div class="login-container" style="text-align: center;">
+                    <div id="g_id_onload"
+                         data-client_id="80241279325-7vv3gco6bt8rdchkh1oepa3hn1mp8bnr.apps.googleusercontent.com"
+                         data-callback="onSignIn">
+                    </div>
+                    <div class="g_id_signin" data-type="standard" style="margin-left: 500px; margin-top:300px">
+                        Đăng nhập với Google
+                    </div>
+                </div>
+    
 </div>
+
+
+
+<!-- Chèn script Google Sign-In -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+    function onSignIn(response) {
+        // Lấy ID token từ response
+        const id_token = response.credential;
+        console.log('ID Token:', id_token);
+        sendTokenToBackend(id_token);
+    }
+
+    function sendTokenToBackend(id_token) {
+        fetch('https://localhost:7016/api/google-login/Login', {  // Cập nhật URL đến backend của bạn
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: id_token }), // Gửi ID token đến backend
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Kiểm tra nếu có token trong phản hồi
+            console.log('Backend response:', data.jwtToken);
+
+            if (data && data.jwtToken) {
+                // Lưu JWT token vào localStorage
+                localStorage.setItem('jwtToken', data.jwtToken);
+
+                // Chuyển hướng người dùng sau khi đăng nhập thành công
+                window.location.href = '/home';  // Chuyển hướng đến trang chính (hoặc trang bạn muốn)
+            } else {
+                alert('Đăng nhập thất bại: ' + (data.message || 'Có lỗi xảy ra'));
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi gửi token đến backend:', error);
+            alert('Đã xảy ra lỗi trong quá trình đăng nhập.');
+        });
+    }
+</script>

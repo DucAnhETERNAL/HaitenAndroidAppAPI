@@ -20,11 +20,35 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Cập nhật tên người dùng
                     const userDropdown = document.getElementById("userDropdown");
                     userDropdown.textContent = userName;
+                    
                 }
             })
             .catch(error => {
                 console.error("Không thể lấy thông tin người dùng:", error);
     
             });
+    }
+    // Handle logout
+    const handleLogout = () => {
+        // Clear JWT token and redirect to login page
+        localStorage.removeItem("jwtToken");
+
+        // Hide the user info nav and show login nav
+        const userInfoNav = document.getElementById("userInfoNav");
+        const loginNav = document.getElementById("loginNav");
+
+        if (userInfoNav && loginNav) {
+            userInfoNav.style.display = "none";
+            loginNav.style.display = "block"; // Show login nav
+        }
+
+        // Redirect to login page
+        window.location.href = '/home';
+    };
+
+    // Attach the logout function to the button
+    const logoutButton = document.getElementById("logoutButton");
+    if (logoutButton) {
+        logoutButton.addEventListener("click", handleLogout);
     }
 });
