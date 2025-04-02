@@ -152,8 +152,8 @@
                     <div class="section-title">
                         <h5>Your Comment</h5>
                     </div>
-                    <form action="#">
-                        <textarea placeholder="Your Comment"></textarea>
+                    <form id="commentForm">
+                        <textarea id="commentContent" placeholder="Your Comment"></textarea>
                         <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
                     </form>
                 </div>
@@ -187,4 +187,35 @@
             </div>
         </div>
     </div>
+
 </section>
+<script>
+        // Event listener for the form submission
+    $(document).ready(function () {
+        $("#commentForm").submit(function (event) {
+            event.preventDefault(); // Prevent the form from refreshing the page
+
+            // Get the content of the comment from the textarea
+            const commentContent = $("#commentContent").val();
+
+            // Prepare the data to send
+            const commentData = {
+                userId: 0, // You may want to replace with the actual logged-in user ID
+                chapterId: 0, // Replace with the actual chapter ID
+                content: commentContent,
+                createdAt: new Date().toISOString()  // Using current timestamp
+            };
+
+            // Send the data to the API
+            ApiService.post('Comment/add', commentData)
+                .then(response => {
+                    console.log("Comment added successfully:", response);
+                    // You can do something after a successful API call, like clearing the form or updating the page
+                })
+                .catch(error => {
+                    console.error("Failed to add comment:", error);
+                });
+        });
+    });
+
+</script>
