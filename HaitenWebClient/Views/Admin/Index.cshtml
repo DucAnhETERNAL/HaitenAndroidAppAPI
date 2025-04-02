@@ -1,3 +1,78 @@
 ﻿@{
     Layout = "Adminshared/_AdminLayout";
 }
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Danh sách Manga</h2>
+
+    <!-- Search Input -->
+    <div>
+        <input type="text" id="mangaTitleInput" placeholder="Tìm kiếm Manga" oninput="HandleInputChange('mangaTitle', this.value)">
+        <button class="btn btn-success ml-3" onclick="openAddMangaModal()" id="addnew-manga">+ Thêm Manga</button>
+    </div>
+
+    <!-- Manga Table -->
+    <div class="card shadow-sm p-4">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Manga</th>
+                    <th>Tác giả</th>
+
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="mangaTableBody">
+                <!-- Dữ liệu sẽ được đổ vào đây bằng JavaScript -->
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-between mt-3">
+
+            <div id="pagination"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Popup thêm Manga -->
+<div id="addMangaModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAddMangaModal()">&times;</span>
+        <h3 class="modal-title">Thêm Manga mới</h3>
+        <form id="addMangaForm">
+            <div class="form-group">
+                <label for="genre">Thể loại:</label>
+                <select id="genre" class="form-control" required></select>
+            </div>
+
+            <div class="form-group">
+                <label for="mangaTitle">Tên Manga:</label>
+                <input type="text" id="mangaTitle" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="author">Tác giả:</label>
+                <input type="text" id="author" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô tả:</label>
+                <textarea id="description" class="form-control" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Trạng thái:</label>
+                <select id="status" class="form-control" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-primary mt-3" onclick="handleAddManga()">Thêm</button>
+        </form>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/css/modal.css">
+<script type="module" src="/js/Manga/Manga.js"></script>

@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Repository\Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\Manga\" />
+  </ItemGroup>
+
 </Project>
