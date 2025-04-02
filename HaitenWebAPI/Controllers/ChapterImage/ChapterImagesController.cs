@@ -76,7 +76,7 @@ namespace HaitenWebAPI.Controllers.ChapterImage
 
             // Lưu file ảnh
             var fileName = Path.GetFileName(Image.FileName);
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot_1", "images", fileName);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
 
             using (var stream = new FileStream(path, FileMode.Create))
             {
@@ -115,7 +115,7 @@ namespace HaitenWebAPI.Controllers.ChapterImage
             }
 
             // Xóa file cũ nếu có
-            var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot_1", existingImage.ImageUrl.TrimStart('/'));
+            var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", existingImage.ImageUrl.TrimStart('/'));
             if (System.IO.File.Exists(oldPath))
             {
                 System.IO.File.Delete(oldPath);
@@ -123,7 +123,7 @@ namespace HaitenWebAPI.Controllers.ChapterImage
 
             // Lưu file mới
             var fileName = Path.GetFileName(Image.FileName);
-            var newPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot_1", "images", fileName);
+            var newPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
             using (var stream = new FileStream(newPath, FileMode.Create))
             {
                 await Image.CopyToAsync(stream);

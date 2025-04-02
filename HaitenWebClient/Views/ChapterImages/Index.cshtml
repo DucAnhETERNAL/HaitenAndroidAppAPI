@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "Usershared/_UserLayout";
+}
+@{
+    ViewData["Title"] = "Danh sách ảnh chương";
+}
+
+<h2 class="text-center" style="color: white; font-weight: bold;">Danh sách ảnh chương</h2>
+
+<!-- Chọn Chapter ID -->
+<div class="text-center">
+    <label for="chapterId" style="color: white; font-weight: bold;">Chọn Chapter:</label>
+    <input type="number" id="chapterId" min="1" value="1">
+    <button onclick="fetchChapterImages()">Hiển thị</button>
+</div>
+
+<!-- Hiển thị ảnh -->
+<div id="imageContainer" class="image-list"></div>
+
+<!-- Nhúng JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/chapterImages.js"></script>
+<!-- Chọn Chapter ID -->
+<div class="text-center">
+    <label for="chapterId">Chọn Chapter:</label>
+    <input type="number" id="chapterId" min="1" value="1">
+    <button onclick="fetchChapterImages()">Hiển thị</button>
+</div>
+<!-- CSS -->
+<style>
+    .image-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+    .image-list img {
+        width: 80%;
+        max-width: 600px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
