@@ -16,7 +16,7 @@ namespace HaitenWebAPI.Controllers.ChapterImage
             _chapterImagesRepository = chapterImagesRepository;
         }
         [HttpGet]
-        [Route("getImagesByChapter")]
+        [Route("getImagesByChapter")] //https://localhost:7016/api/chapterimages/getImagesByChapter?ChapterId=1 
         public IActionResult GetImagesByChapter(int chapterId)
         {
             var images = _chapterImagesRepository.GetImagesByChapterId(chapterId);
@@ -31,7 +31,7 @@ namespace HaitenWebAPI.Controllers.ChapterImage
 
 
         [HttpPost]
-        [Route("uploadfile")]
+        [Route("uploadfile")] //https://localhost:7016/api/chapterimages/uploadfile?ChapterId=1
         public async Task<IActionResult> PostWithImage([FromForm] IFormFile Image, [FromQuery] int ChapterId, [FromQuery] int? Position)
         {
             // Kiểm tra ChapterId có hợp lệ không
