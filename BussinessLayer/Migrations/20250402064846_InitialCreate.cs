@@ -33,10 +33,12 @@ namespace BussinessLayer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AmountPaid = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,7 +55,7 @@ namespace BussinessLayer.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrls = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrls = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GenreId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -146,6 +148,27 @@ namespace BussinessLayer.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChapterImages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ChapterId = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Position = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChapterImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChapterImages_Chapters_ChapterId",
+                        column: x => x.ChapterId,
+                        principalTable: "Chapters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -243,11 +266,11 @@ namespace BussinessLayer.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "Password", "Role", "Status", "UserName" },
+                columns: new[] { "Id", "AmountPaid", "Email", "Password", "PaymentStatus", "Role", "Status", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "user1@example.com", "password1", "User", "Active", "user1" },
-                    { 2, "admin1@example.com", "password2", "Admin", "Active", "admin1" }
+                    { 1, 0m, "user1@example.com", "password1", null, "User", "Active", "user1" },
+                    { 2, 0m, "admin1@example.com", "password2", null, "Admin", "Active", "admin1" }
                 });
 
             migrationBuilder.InsertData(
@@ -291,6 +314,11 @@ namespace BussinessLayer.Migrations
                 table: "ReadingHistories",
                 columns: new[] { "Id", "ChapterId", "MangaId", "ReadDate", "Status", "UserId" },
                 values: new object[] { 1, 1, 1, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Completed", 1 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChapterImages_ChapterId",
+                table: "ChapterImages",
+                column: "ChapterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chapters_MangaId",
@@ -357,6 +385,9 @@ namespace BussinessLayer.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ChapterImages");
+
             migrationBuilder.DropTable(
                 name: "ChapterTexts");
 

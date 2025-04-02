@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BussinessLayer.Migrations
 {
     [DbContext(typeof(PRMDbContext))]
-    [Migration("20250316085348_Second")]
-    partial class Second
+    [Migration("20250402064846_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,31 @@ namespace BussinessLayer.Migrations
                             Status = true,
                             ViewCount = 150
                         });
+                });
+
+            modelBuilder.Entity("BussinessLayer.ChapterImages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChapterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChapterId");
+
+                    b.ToTable("ChapterImages");
                 });
 
             modelBuilder.Entity("BussinessLayer.ChapterText", b =>
@@ -336,12 +361,17 @@ namespace BussinessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentStatus")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -349,7 +379,6 @@ namespace BussinessLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -364,6 +393,7 @@ namespace BussinessLayer.Migrations
                         new
                         {
                             Id = 1,
+                            AmountPaid = 0m,
                             Email = "user1@example.com",
                             Password = "password1",
                             Role = "User",
@@ -373,6 +403,7 @@ namespace BussinessLayer.Migrations
                         new
                         {
                             Id = 2,
+                            AmountPaid = 0m,
                             Email = "admin1@example.com",
                             Password = "password2",
                             Role = "Admin",
@@ -437,6 +468,17 @@ namespace BussinessLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Manga");
+                });
+
+            modelBuilder.Entity("BussinessLayer.ChapterImages", b =>
+                {
+                    b.HasOne("BussinessLayer.Chapter", "Chapter")
+                        .WithMany("ChapterImages")
+                        .HasForeignKey("ChapterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chapter");
                 });
 
             modelBuilder.Entity("BussinessLayer.ChapterText", b =>
@@ -547,6 +589,8 @@ namespace BussinessLayer.Migrations
 
             modelBuilder.Entity("BussinessLayer.Chapter", b =>
                 {
+                    b.Navigation("ChapterImages");
+
                     b.Navigation("ChapterText")
                         .IsRequired();
 
