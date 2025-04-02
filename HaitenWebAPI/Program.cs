@@ -5,10 +5,19 @@ using Net.payOS;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using BussinessObject;
+using DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add Scoped services for each repository
-
+builder.Services.AddDbContext<PRMDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+builder.Services.AddScoped<ChapterImagesDAO>();
+builder.Services.AddScoped<IChapterImagesRepository, ChapterImagesRepository>();
 builder.Services.AddScoped<IChapterRepository, ChapterRepository>();
 builder.Services.AddScoped<IChapterTextRepository, ChapterTextRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
@@ -48,9 +57,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAutoMapper(typeof(Program));
 // Add services to the container.
 builder.Services.AddControllers().AddOData(opt => opt.Select().Filter().OrderBy().Expand().Count().SetMaxTop(100));
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 100 * 1024 * 1024; // 100MB
+});
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Haiten API", Version = "v1" });
+
+    // Cấu hình Swagger hỗ trợ upload file
+    c.OperationFilter<SwaggerFileOperationFilter>();
+});
+
 
 var app = builder.Build();
 
@@ -64,6 +84,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("SpecificOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStaticFiles();
 
 app.MapControllers();
 

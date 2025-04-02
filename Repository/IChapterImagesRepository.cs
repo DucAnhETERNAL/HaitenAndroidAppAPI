@@ -7,7 +7,14 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    public interface IChapterImagesRepository : IRepositoryBase<ChapterImages>
+    public interface IChapterImagesRepository
     {
+        void AddChapterImage(ChapterImages chapterImage);
+        Chapter FindChapterById(int chapterId);
+        List<ChapterImages> GetImagesByChapterId(int chapterId);
+        ChapterImages GetChapterImageById(int id);
+        void UpdateChapterImage(ChapterImages chapterImage);
+        void DeleteChapterImage(int id);
+
     }
 }
