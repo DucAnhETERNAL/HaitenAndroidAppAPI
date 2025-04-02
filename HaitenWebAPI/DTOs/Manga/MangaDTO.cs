@@ -1,4 +1,9 @@
-﻿using HaitenWebAPI.DTOs.Chapter;
+﻿using BussinessLayer;
+using HaitenWebAPI.DTOs.Chapter;
+using HaitenWebAPI.DTOs.Comment;
+using HaitenWebAPI.DTOs.Genres;
+
+
 
 namespace HaitenWebAPI.DTOs.Manga
 {
@@ -9,10 +14,13 @@ namespace HaitenWebAPI.DTOs.Manga
         public string Description { get; set; }
         public string Author { get; set; }
         public string Type { get; set; }
-        
         public int GenreId { get; set; }
         public string Status { get; set; }
         public List<ChapterListDTO> Chapters { get; set; }
+        public List<GenresDTO> Genres { get; set; }
+        //public List<CommentDTO> Comments { get; set; }
+
+
 
     }
 }

@@ -4,26 +4,17 @@
     var mangaId = ViewData["MangaId"];
 }
 
-<h2 style="color: white;">@Model.Title</h2>
-
-<p style="color: white;">Manga ID: @mangaId</p>
-<p style="color: white;">@Model.Description</p>
-<ul>
-    @foreach (var chap in Model.Chapters)
-
-    {
-            <li style="color: white;">@chap.Name - @(chap.Status ? "Chưa đọc" : "Đã đọc")</li>
-    }
-</ul>
 
 
-<a href="/Manga/ReaddingMangaText">Đọc Manga</a>
+
+
+
 <!-- Breadcrumb Begin -->
 <div class="breadcrumb-option">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="breadcrumb__links">
+                <div class="breadcrumb__links"> 
                     <a href="./index.html"><i class="fa fa-home"></i> Home</a>
                     <a href="./categories.html">Categories</a>
                     <span>Romance</span>
@@ -39,7 +30,7 @@
         <div class="anime__details__content">
             <div class="row">
                 <div class="col-lg-3">
-                    <div class="anime__details__pic set-bg" data-setbg="/img/anime/details-pic.jpg">
+                    <div class="anime__details__pic set-bg" data-setbg="img/anime/details-pic.jpg">
                         <div class="comment"><i class="fa fa-comments"></i> 11</div>
                         <div class="view"><i class="fa fa-eye"></i> 9141</div>
                     </div>
@@ -48,7 +39,6 @@
                     <div class="anime__details__text">
                         <div class="anime__details__title">
                             <h3 style="color: white;">@Model.Title</h3>
-                            <span>フェイト／ステイナイト, Feito／sutei naito</span>
                         </div>
                         <div class="anime__details__rating">
                             <div class="rating">
@@ -67,10 +57,32 @@
                                 <div class="col-lg-6 col-md-6">
                                     <ul>
                                         <li><span>Type:</span> @Model.Type</li>
-                                        <li><span>Studios:</span> Lerche</li>
-                                        <li><span>Date aired:</span> Oct 02, 2019 to ?</li>
-                                        <li><span>Status:</span> Airing</li>
-                                        <li><span>Genre:</span> Action, Adventure, Fantasy, Magic</li>
+                                        <li><span>Author:</span> @Model.Author</li>
+                                        <li>
+                                        <span>Genres:</span>
+                                            @if (Model.Genres != null && Model.Genres.Count > 0)
+
+                                            {
+                                                <ul>
+                                                    @foreach (var genre in Model.Genres)
+
+                                                    {
+                                                        <li>@genre.Name</li>
+                                                    }
+                                                </ul>
+                                            }
+
+                                            else
+
+                                            {
+                                                <p>No genres available</p>
+                                            }
+
+
+
+
+                                        
+                                        <li><span>Status:</span> @Model.Status</li>
                                     </ul>
                                 </div>
                                 <div class="col-lg-6 col-md-6">
@@ -84,6 +96,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="anime__details__btn">
                             <a href="#" class="follow-btn"><i class="fa fa-heart-o"></i> Follow</a>
                             <a href="#" class="watch-btn">
@@ -94,6 +107,28 @@
                 </div>
             </div>
         </div>
+
+
+        <section class="manga-chapters mt-5">
+            <div class="container">
+                <h3 class="text-center text-white">Danh sách các Chương</h3>
+                <ul class="list-group list-group-flush">
+                    @foreach (var chap in Model.Chapters)
+
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: #333; color: white;">
+                            <a href="@Url.Action("ReaddingMangaText", "Manga", new { chapterId = chap.Id })" class="text-decoration-none text-light">
+                                @chap.Name
+                            </a>
+                            <span class="badge badge-pill @(chap.Status ? "badge-success" : "badge-warning")">
+                                @(chap.Status ? "Đã đọc" : "Chưa đọc")
+                            </span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </section>
+
         <div class="row">
             <div class="col-lg-8 col-md-8">
                 <div class="anime__details__review">
@@ -102,7 +137,7 @@
                     </div>
                     <div class="anime__review__item">
                         <div class="anime__review__item__pic">
-                            <img src="/img/anime/review-1.jpg" alt="">
+                            <img src="img/anime/review-1.jpg" alt="">
                         </div>
                         <div class="anime__review__item__text">
                             <h6>Chris Curry - <span>1 Hour ago</span></h6>
@@ -114,7 +149,7 @@
                     </div>
                     <div class="anime__review__item">
                         <div class="anime__review__item__pic">
-                            <img src="/img/anime/review-2.jpg" alt="">
+                            <img src="img/anime/review-2.jpg" alt="">
                         </div>
                         <div class="anime__review__item__text">
                             <h6>Lewis Mann - <span>5 Hour ago</span></h6>
@@ -123,7 +158,7 @@
                     </div>
                     <div class="anime__review__item">
                         <div class="anime__review__item__pic">
-                            <img src="/img/anime/review-3.jpg" alt="">
+                            <img src="img/anime/review-3.jpg" alt="">
                         </div>
                         <div class="anime__review__item__text">
                             <h6>Louis Tyler - <span>20 Hour ago</span></h6>
@@ -132,7 +167,7 @@
                     </div>
                     <div class="anime__review__item">
                         <div class="anime__review__item__pic">
-                            <img src="/img/anime/review-4.jpg" alt="">
+                            <img src="img/anime/review-4.jpg" alt="">
                         </div>
                         <div class="anime__review__item__text">
                             <h6>Chris Curry - <span>1 Hour ago</span></h6>
@@ -144,7 +179,7 @@
                     </div>
                     <div class="anime__review__item">
                         <div class="anime__review__item__pic">
-                            <img src="/img/anime/review-5.jpg" alt="">
+                            <img src="img/anime/review-5.jpg" alt="">
                         </div>
                         <div class="anime__review__item__text">
                             <h6>Lewis Mann - <span>5 Hour ago</span></h6>
@@ -153,7 +188,7 @@
                     </div>
                     <div class="anime__review__item">
                         <div class="anime__review__item__pic">
-                            <img src="/img/anime/review-6.jpg" alt="">
+                            <img src="img/anime/review-6.jpg" alt="">
                         </div>
                         <div class="anime__review__item__text">
                             <h6>Louis Tyler - <span>20 Hour ago</span></h6>
@@ -165,8 +200,8 @@
                     <div class="section-title">
                         <h5>Your Comment</h5>
                     </div>
-                    <form id="commentForm">
-                        <textarea id="commentContent" placeholder="Your Comment"></textarea>
+                    <form action="#">
+                        <textarea placeholder="Your Comment"></textarea>
                         <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
                     </form>
                 </div>
@@ -176,22 +211,22 @@
                     <div class="section-title">
                         <h5>you might like...</h5>
                     </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="/img/sidebar/tv-1.jpg">
+                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
                         <div class="ep">18 / ?</div>
                         <div class="view"><i class="fa fa-eye"></i> 9141</div>
                         <h5><a href="#">Boruto: Naruto next generations</a></h5>
                     </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="/img/sidebar/tv-2.jpg">
+                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-2.jpg">
                         <div class="ep">18 / ?</div>
                         <div class="view"><i class="fa fa-eye"></i> 9141</div>
                         <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
                     </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="/img/sidebar/tv-3.jpg">
+                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-3.jpg">
                         <div class="ep">18 / ?</div>
                         <div class="view"><i class="fa fa-eye"></i> 9141</div>
                         <h5><a href="#">Sword art online alicization war of underworld</a></h5>
                     </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="/img/sidebar/tv-4.jpg">
+                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-4.jpg">
                         <div class="ep">18 / ?</div>
                         <div class="view"><i class="fa fa-eye"></i> 9141</div>
                         <h5><a href="#">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
@@ -200,35 +235,4 @@
             </div>
         </div>
     </div>
-
 </section>
-<script>
-        // Event listener for the form submission
-    $(document).ready(function () {
-        $("#commentForm").submit(function (event) {
-            event.preventDefault(); // Prevent the form from refreshing the page
-
-            // Get the content of the comment from the textarea
-            const commentContent = $("#commentContent").val();
-
-            // Prepare the data to send
-            const commentData = {
-                userId: 0, // You may want to replace with the actual logged-in user ID
-                chapterId: 0, // Replace with the actual chapter ID
-                content: commentContent,
-                createdAt: new Date().toISOString()  // Using current timestamp
-            };
-
-            // Send the data to the API
-            ApiService.post('Comment/add', commentData)
-                .then(response => {
-                    console.log("Comment added successfully:", response);
-                    // You can do something after a successful API call, like clearing the form or updating the page
-                })
-                .catch(error => {
-                    console.error("Failed to add comment:", error);
-                });
-        });
-    });
-
-</script>
