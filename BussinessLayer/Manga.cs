@@ -18,7 +18,7 @@ namespace BussinessLayer
         public string Description { get; set; }
         public string Author { get; set; }
         public string Type { get; set; }
-        public string ImageUrls { get; set; }
+        public string? ImageUrls { get; set; }
         public int GenreId { get; set; }
         public string Status { get; set; }
         public virtual Genres Genre { get; set; }

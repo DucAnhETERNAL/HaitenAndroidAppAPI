@@ -13,5 +13,6 @@ namespace Repository
         Task<User> GetUserByEmail(string email);
         Task<IEnumerable<User>> GetUsersByRole(string role);
         Task<int> GetUserCount();
+        Task UpdatePaymentStatus(int userId, string paymentStatus, decimal amountPaid);
     }
 }

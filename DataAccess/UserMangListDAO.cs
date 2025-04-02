@@ -53,5 +53,14 @@ namespace DataAccess
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<IEnumerable<UserMangaList>> GetUserMangaList(int userId)
+        {
+            return await _context.UserMangaLists
+                .Where(uml => uml.UserId == userId)  
+                .Include(uml => uml.User)           
+                .Include(uml => uml.Manga)         
+                .ToListAsync();                     
+        }
+
     }
 }

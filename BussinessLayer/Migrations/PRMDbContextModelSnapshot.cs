@@ -51,6 +51,26 @@ namespace BussinessLayer.Migrations
                     b.HasIndex("MangaId");
 
                     b.ToTable("Chapters");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MangaId = 1,
+                            Name = "Chapter 1",
+                            Status = true,
+                            ViewCount = 100
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MangaId = 2,
+                            Name = "Chapter 1",
+                            Status = true,
+                            ViewCount = 150
+                        });
                 });
 
             modelBuilder.Entity("BussinessLayer.ChapterImages", b =>
@@ -101,6 +121,46 @@ namespace BussinessLayer.Migrations
                     b.ToTable("ChapterTexts");
                 });
 
+            modelBuilder.Entity("BussinessLayer.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChapterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChapterId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ChapterId = 1,
+                            Content = "Great chapter!",
+                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 1
+                        });
+                });
+
             modelBuilder.Entity("BussinessLayer.Genres", b =>
                 {
                     b.Property<int>("Id")
@@ -116,6 +176,23 @@ namespace BussinessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Action"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Adventure"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Romance"
+                        });
                 });
 
             modelBuilder.Entity("BussinessLayer.Manga", b =>
@@ -138,7 +215,6 @@ namespace BussinessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ImageUrls")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -158,6 +234,30 @@ namespace BussinessLayer.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("Mangas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Author = "Author 1",
+                            Description = "Description for Manga 1",
+                            GenreId = 1,
+                            ImageUrls = "url1",
+                            Status = "Active",
+                            Title = "Manga 1",
+                            Type = "Type 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Author = "Author 2",
+                            Description = "Description for Manga 2",
+                            GenreId = 2,
+                            ImageUrls = "url2",
+                            Status = "Active",
+                            Title = "Manga 2",
+                            Type = "Type 2"
+                        });
                 });
 
             modelBuilder.Entity("BussinessLayer.Rate", b =>
@@ -191,6 +291,17 @@ namespace BussinessLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Rates");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comment = "Excellent!",
+                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MangaId = 1,
+                            Rating = 5,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("BussinessLayer.ReadingHistory", b =>
@@ -226,6 +337,17 @@ namespace BussinessLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ReadingHistories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ChapterId = 1,
+                            MangaId = 1,
+                            ReadDate = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Completed",
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("BussinessLayer.User", b =>
@@ -236,12 +358,17 @@ namespace BussinessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentStatus")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -249,7 +376,6 @@ namespace BussinessLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -259,6 +385,28 @@ namespace BussinessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AmountPaid = 0m,
+                            Email = "user1@example.com",
+                            Password = "password1",
+                            Role = "User",
+                            Status = "Active",
+                            UserName = "user1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AmountPaid = 0m,
+                            Email = "admin1@example.com",
+                            Password = "password2",
+                            Role = "Admin",
+                            Status = "Active",
+                            UserName = "admin1"
+                        });
                 });
 
             modelBuilder.Entity("BussinessLayer.UserMangaList", b =>
@@ -288,6 +436,24 @@ namespace BussinessLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserMangaLists");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AddedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsFavorite = true,
+                            MangaId = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AddedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsFavorite = false,
+                            MangaId = 2,
+                            UserId = 2
+                        });
                 });
 
             modelBuilder.Entity("BussinessLayer.Chapter", b =>
@@ -321,6 +487,25 @@ namespace BussinessLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Chapter");
+                });
+
+            modelBuilder.Entity("BussinessLayer.Comment", b =>
+                {
+                    b.HasOne("BussinessLayer.Chapter", "Chapter")
+                        .WithMany("Comments")
+                        .HasForeignKey("ChapterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BussinessLayer.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chapter");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BussinessLayer.Manga", b =>
@@ -406,6 +591,8 @@ namespace BussinessLayer.Migrations
                     b.Navigation("ChapterText")
                         .IsRequired();
 
+                    b.Navigation("Comments");
+
                     b.Navigation("ReadingHistories");
                 });
 
@@ -427,6 +614,8 @@ namespace BussinessLayer.Migrations
 
             modelBuilder.Entity("BussinessLayer.User", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Rates");
 
                     b.Navigation("ReadingHistories");

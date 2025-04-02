@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +10,8 @@ namespace BussinessLayer
 {
     public class Chapter
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int MangaId { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -18,6 +22,8 @@ namespace BussinessLayer
         public Manga Manga { get; set; }
         public ChapterText ChapterText { get; set; }
         public ICollection<ChapterImages> ChapterImages { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
         public ICollection<ReadingHistory> ReadingHistories { get; set; }
     }
 

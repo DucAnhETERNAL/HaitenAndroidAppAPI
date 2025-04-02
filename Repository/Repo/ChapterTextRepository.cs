@@ -21,5 +21,9 @@ namespace Repository.Repo
         public async Task Update(ChapterText chapterText) => await _chapterTextDAO.Update(chapterText);
 
         public async Task Delete(int id) => await _chapterTextDAO.Delete(id);
+        public async Task<ChapterText> GetByChapterId(int chapterId)
+        
+        =>  await _chapterTextDAO.GetByChapterId(chapterId);
+        
     }
 }

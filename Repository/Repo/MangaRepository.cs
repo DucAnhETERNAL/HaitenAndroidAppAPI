@@ -21,5 +21,6 @@ namespace Repository.Repo
         public async Task Update(Manga manga) => await _mangaDAO.Update(manga);
 
         public async Task Delete(int id) => await _mangaDAO.Delete(id);
+        public async Task<IEnumerable<Manga>> GetByIds(List<int> mangaIds) => await _mangaDAO.GetByIds(mangaIds); // Call GetByIds from DAO
     }
 }

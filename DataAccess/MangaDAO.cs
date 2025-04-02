@@ -18,7 +18,17 @@ namespace DataAccess
                 .Include(m => m.ReadingHistories)
                 .ToListAsync();
         }
-
+        public async Task<IEnumerable<Manga>> GetByIds(List<int> mangaIds)
+        {
+            return await _context.Mangas
+                                   .Where(m => mangaIds.Contains(m.Id))
+                                   .Include(m => m.Genre) // Include other related entities if needed
+                                   .Include(m => m.Chapters)
+                                   .Include(m => m.Rates)
+                                   .Include(m => m.UserMangaLists)
+                                   .Include(m => m.ReadingHistories)
+                                   .ToListAsync();
+        }
         public async Task<Manga> GetMangaById(int id)
         {
             return await _context.Mangas

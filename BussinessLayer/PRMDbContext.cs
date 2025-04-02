@@ -21,6 +21,7 @@ namespace BussinessObject
         public DbSet<Manga> Mangas { get; set; }
         public DbSet<Genres> Genres { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<ChapterImages> ChapterImages { get; set; }
         public DbSet<ChapterText> ChapterTexts { get; set; }
         public DbSet<Rate> Rates { get; set; }
@@ -106,7 +107,15 @@ namespace BussinessObject
                 .WithMany(u => u.Rates)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(c => c.UserId);
 
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Chapter)
+                .WithMany(ch => ch.Comments)
+                .HasForeignKey(c => c.ChapterId);
             // Many-to-Many: User - Manga (No Cascade)
             modelBuilder.Entity<UserMangaList>()
                 .HasOne(uml => uml.User)
@@ -119,6 +128,139 @@ namespace BussinessObject
                 .WithMany(m => m.UserMangaLists)
                 .HasForeignKey(uml => uml.MangaId)
                 .OnDelete(DeleteBehavior.Restrict); // ✅ Ngăn chặn cascade delete
+            modelBuilder.Entity<Genres>().HasData(
+        new Genres { Id = 1, Name = "Action" },
+        new Genres { Id = 2, Name = "Adventure" },
+        new Genres { Id = 3, Name = "Romance" }
+    );
+
+            // Seed Manga
+            modelBuilder.Entity<Manga>().HasData(
+                new Manga
+                {
+                    Id = 1,
+                    Title = "Manga 1",
+                    Description = "Description for Manga 1",
+                    Author = "Author 1",
+                    Type = "Type 1",
+                    ImageUrls = "url1",
+                    GenreId = 1,
+                    Status = "Active"
+                },
+                new Manga
+                {
+                    Id = 2,
+                    Title = "Manga 2",
+                    Description = "Description for Manga 2",
+                    Author = "Author 2",
+                    Type = "Type 2",
+                    ImageUrls = "url2",
+                    GenreId = 2,
+                    Status = "Active"
+                }
+            );
+
+            // Seed Chapters
+            modelBuilder.Entity<Chapter>().HasData(
+                new Chapter
+                {
+                    Id = 1,
+                    MangaId = 1,
+                    Name = "Chapter 1",
+                    Status = true,
+                    ViewCount = 100,
+                    CreatedAt = new DateTime(2023, 1, 1)
+                },
+                new Chapter
+                {
+                    Id = 2,
+                    MangaId = 2,
+                    Name = "Chapter 1",
+                    Status = true,
+                    ViewCount = 150,
+                    CreatedAt = new DateTime(2023, 1, 1)    
+                }
+            );
+
+            // Seed Users
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = 1,
+                    UserName = "user1",
+                    Email = "user1@example.com",
+                    Password = "password1", // Make sure to hash passwords before storing them
+                    Role = "User",
+                    Status = "Active"
+                },
+                new User
+                {
+                    Id = 2,
+                    UserName = "admin1",
+                    Email = "admin1@example.com",
+                    Password = "password2", // Hash password here
+                    Role = "Admin",
+                    Status = "Active"
+                }
+            );
+
+            // Seed UserMangaList (Many-to-Many)
+            modelBuilder.Entity<UserMangaList>().HasData(
+                new UserMangaList
+                {
+                    Id = 1,
+                    UserId = 1,
+                    MangaId = 1,
+                    AddedAt = new DateTime(2023, 1, 1),
+                    IsFavorite = true
+                },
+                new UserMangaList
+                {
+                    Id = 2,
+                    UserId = 2,
+                    MangaId = 2,
+                    AddedAt = new DateTime(2023, 1, 1),
+                    IsFavorite = false
+                }
+            );
+
+            // Seed Comments
+            modelBuilder.Entity<Comment>().HasData(
+                new Comment
+                {
+                    Id = 1,
+                    UserId = 1,
+                    ChapterId = 1,
+                    Content = "Great chapter!",
+                    CreatedAt = new DateTime(2023, 1, 1)
+                }
+            );
+
+            // Seed ReadingHistory
+            modelBuilder.Entity<ReadingHistory>().HasData(
+                new ReadingHistory
+                {
+                    Id = 1,
+                    UserId = 1,
+                    MangaId = 1,
+                    ChapterId = 1,
+                    ReadDate = new DateTime(2023, 1, 1),
+                    Status = "Completed"
+                }
+            );
+
+            // Seed Rates
+            modelBuilder.Entity<Rate>().HasData(
+                new Rate
+                {
+                    Id = 1,
+                    MangaId = 1,
+                    UserId = 1,
+                    Rating = 5,
+                    Comment = "Excellent!",
+                    CreatedAt = new DateTime(2023, 1, 1)
+                }
+            );
         }
 
     }

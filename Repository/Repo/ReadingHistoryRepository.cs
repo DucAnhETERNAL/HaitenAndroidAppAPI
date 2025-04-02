@@ -21,6 +21,11 @@ namespace Repository.Repo
         public async Task Update(ReadingHistory history) => await _readingHistoryDAO.Update(history);
 
         public async Task Delete(int id) => await _readingHistoryDAO.Delete(id);
+
+        public  async Task<IEnumerable<ReadingHistory>> GetByUserId(int userId)
+        =>  await _readingHistoryDAO.GetByUserId(userId);
+
+        
     }
 }
 

@@ -9,5 +9,6 @@ namespace Repository
 {
     public interface IMangaRepository : IRepositoryBase<Manga>
     {
+        Task<IEnumerable<Manga>> GetByIds(List<int> mangaIds);
     }
 }

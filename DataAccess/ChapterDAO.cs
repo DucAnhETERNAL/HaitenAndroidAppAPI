@@ -13,7 +13,7 @@ namespace DataAccess
             return await _context.Chapters
                 .Include(c => c.Manga)
                 .Include(c => c.ChapterText)
-                .Include(c => c.ChapterImages)
+                /*.Include(c => c.ChapterImages)*/
                 .Include(c => c.ReadingHistories)
                 .ToListAsync();
         }
@@ -23,7 +23,7 @@ namespace DataAccess
             return await _context.Chapters
                 .Include(c => c.Manga)
                 .Include(c => c.ChapterText)
-                .Include(c => c.ChapterImages)
+               /* .Include(c => c.ChapterImages)*/
                 .Include(c => c.ReadingHistories)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
