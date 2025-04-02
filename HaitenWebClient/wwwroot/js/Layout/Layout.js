@@ -7,8 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
         ApiService.get("google-login/profile", {}, { Authorization: `Bearer ${jwtToken}` })
             .then(response => {
                 // Lấy thông tin người dùng từ phản hồi
+                const userId = response.id;
                 const userName = response.userName;
                 const role = response.role;
+
+
                 // Hiển thị tên người dùng trong dropdown
                 const userInfoNav = document.getElementById("userInfoNav");
                 const loginNav = document.getElementById("loginNav");

@@ -100,20 +100,38 @@
             <a id="checkoutUrl" href="" target="_blank">Click here to make the payment</a>
         </div>
     </div>
-
-    <script>
+    <script type="module" src="/js/ApiService.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
         $(document).ready(function() {
             // Lấy JWT từ localStorage
             const jwtToken = localStorage.getItem("jwtToken");
-            if (jwtToken) {
-                // Giải mã JWT để lấy userId
-                const payload = JSON.parse(atob(jwtToken.split('.')[1])); // Giải mã payload từ JWT
-                const userId = payload.userId; // Giả sử `userId` lưu trong payload
 
-                // Điền thông tin vào form (userId sẽ không hiển thị cho người dùng)
-                $('#userId').val(userId);
+            if (jwtToken) {
+                // Gọi API để lấy userId thay vì lấy từ localStorage
+                $.ajax({
+                    url: "https://localhost:7016/api/google-login/profile", // Thay bằng endpoint thực tế của bạn
+                    type: "GET",
+                    headers: {
+                        Authorization: `Bearer ${jwtToken}` // Gửi JWT trong header
+                    },
+                    success: function(response) {
+                        const userId = response.id; // Giả sử API trả về trường `id` chứa userId
+                        if (userId) {
+                            $('#userId').val(userId); // Gán userId vào input hidden
+                            console.log("User ID loaded from API:", userId);
+                        } else {
+                            console.error("Không có userId trong response từ API");
+                            window.location.href = '/login'; // Chuyển hướng nếu không có userId
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("Lỗi khi gọi API:", textStatus, errorThrown);
+                        window.location.href = '/login'; // Chuyển hướng nếu API thất bại
+                    }
+                });
             } else {
-                // Nếu không có JWT, có thể redirect đến trang đăng nhập
+                // Nếu không có JWT, chuyển hướng về trang đăng nhập
                 window.location.href = '/login';
             }
 
@@ -121,11 +139,18 @@
             $('#paymentForm').on('submit', function(event) {
                 event.preventDefault();
 
+                // Lấy userId từ input hidden và số tiền từ form
                 var userId = $('#userId').val();
                 var amount = $('#amount').val();
+                console.log("User ID in submit handler:", userId);
+
+                if (!userId) {
+                    alert("User ID chưa được tải. Vui lòng thử lại hoặc đăng nhập.");
+                    return;
+                }
 
                 $.ajax({
-                    url: "https://localhost:7016/api/Payment/create", // Đảm bảo URL đúng
+                    url: "https://localhost:7016/api/Payment/create",
                     type: "POST",
                     dataType: "json",
                     contentType: "application/json",
