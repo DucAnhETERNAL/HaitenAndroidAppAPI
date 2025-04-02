@@ -1,0 +1,39 @@
+﻿<h2>Danh sách hình ảnh</h2>
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <p>@ViewBag.Message</p>
+}
+
+@foreach (var image in Model)
+{
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="@image.ImageUrl" alt="Chapter Image" style="width: 100%; max-width: 600px;">
+        <p>Vị trí: @image.Position</p>
+
+        <!-- Các nút Update và Delete -->
+        <form asp-action="UpdateImage" method="post" enctype="multipart/form-data" style="display: inline;">
+            <input type="file" name="Image" />
+            <input type="hidden" name="Id" value="@image.Id" /> <!-- Đảm bảo truyền Id của ảnh -->
+            <button type="submit">Cập nhật</button>
+        </form>
+
+
+        <form asp-action="DeleteImage" method="post" style="display: inline;">
+            <input type="hidden" name="Id" value="@image.Id" />
+            <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa ảnh này?')">Xóa</button>
+        </form>
+    </div>
+}
+
+<!-- Form tải lên ảnh mới -->
+<form asp-action="UploadImage" method="post" enctype="multipart/form-data">
+    <label>Chọn hình ảnh:</label>
+    <input type="file" name="Image" required />
+    <select name="ChapterId">
+        <option value="1">Chapter 1</option>
+        <option value="2">Chapter 2</option>
+        <option value="3">Chapter 3</option>
+    </select>
+    <button type="submit">Tải lên</button>
+</form>

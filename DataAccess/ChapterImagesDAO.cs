@@ -6,50 +6,52 @@ using BussinessObject;
 
 namespace DataAccess
 {
-    public class ChapterImagesDAO : SingletonBase<ChapterImagesDAO>
+    public class ChapterImagesDAO
     {
-        public async Task<IEnumerable<ChapterImages>> GetAllChapterImages()
+        private readonly PRMDbContext _dbContext;
+
+        public ChapterImagesDAO(PRMDbContext dbContext)
         {
-            return await _context.ChapterImages
-                .Include(ci => ci.Chapter)
-                .ToListAsync();
+            _dbContext = dbContext;
         }
 
-        public async Task<ChapterImages> GetChapterImageById(int id)
+        public void AddChapterImage(ChapterImages chapterImage)
         {
-            return await _context.ChapterImages
-                .Include(ci => ci.Chapter)
-                .FirstOrDefaultAsync(ci => ci.Id == id);
+            _dbContext.ChapterImages.Add(chapterImage);
+            _dbContext.SaveChanges();
         }
 
-        public async Task Add(ChapterImages chapterImage)
+        public Chapter FindChapterById(int chapterId)
         {
-            _context.ChapterImages.Add(chapterImage);
-            await _context.SaveChangesAsync();
+            return _dbContext.Chapters.Find(chapterId);
+        }
+        public List<ChapterImages> GetImagesByChapterId(int chapterId) // ✅ Thêm phương thức mới
+        {
+            return _dbContext.ChapterImages
+                .Where(ci => ci.ChapterId == chapterId)
+                .OrderBy(ci => ci.Position) // Sắp xếp theo Position từ thấp đến cao
+                .ToList();
+        }
+        public ChapterImages GetChapterImageById(int id)
+        {
+            return _dbContext.ChapterImages.Find(id);
         }
 
-        public async Task Update(ChapterImages chapterImage)
+        public void UpdateChapterImage(ChapterImages chapterImage)
         {
-            var existingChapterImage = await GetChapterImageById(chapterImage.Id);
-            if (existingChapterImage != null)
-            {
-                _context.Entry(existingChapterImage).CurrentValues.SetValues(chapterImage);
-            }
-            else
-            {
-                _context.ChapterImages.Add(chapterImage);
-            }
-            await _context.SaveChangesAsync();
+            _dbContext.ChapterImages.Update(chapterImage);
+            _dbContext.SaveChanges();
         }
 
-        public async Task Delete(int id)
+        public void DeleteChapterImage(int id)
         {
-            var chapterImage = await GetChapterImageById(id);
+            var chapterImage = _dbContext.ChapterImages.Find(id);
             if (chapterImage != null)
             {
-                _context.ChapterImages.Remove(chapterImage);
-                await _context.SaveChangesAsync();
+                _dbContext.ChapterImages.Remove(chapterImage);
+                _dbContext.SaveChanges();
             }
         }
+
     }
 }

@@ -13,9 +13,7 @@
   </PropertyGroup>
 
 
-
   <ItemGroup>
-
     <ProjectReference Include="..\BussinessLayer\BussinessLayer.csproj" />
 
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
@@ -40,5 +38,9 @@
   
 
 </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\images\487418020_1914699292395821_1814794075516020506_n.jpg" />
+    <None Include="wwwroot\images\delete.png" />
+  </ItemGroup>
 
 </Project>

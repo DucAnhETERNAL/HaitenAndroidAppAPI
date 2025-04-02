@@ -18,12 +18,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BussinessLayer\BussinessLayer.csproj" />
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\Admin\" />
     <Folder Include="Controllers\User\" />
+    <Folder Include="wwwroot_1\images\" />
   </ItemGroup>
 
 </Project>
