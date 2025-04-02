@@ -1,6 +1,23 @@
 ﻿@{
     Layout = "Usershared/_UserLayout";
+    ViewData["Title"] = "Manga Details";
+    var mangaId = ViewData["MangaId"];
 }
+
+<h2 style="color: white;">@Model.Title</h2>
+
+<p style="color: white;">Manga ID: @mangaId</p>
+<p style="color: white;">@Model.Description</p>
+<ul>
+    @foreach (var chap in Model.Chapters)
+
+    {
+            <li style="color: white;">@chap.Name - @(chap.Status ? "Chưa đọc" : "Đã đọc")</li>
+    }
+</ul>
+
+
+<a href="/Manga/ReaddingMangaText">Đọc Manga</a>
 <!-- Breadcrumb Begin -->
 <div class="breadcrumb-option">
     <div class="container">
@@ -30,7 +47,7 @@
                 <div class="col-lg-9">
                     <div class="anime__details__text">
                         <div class="anime__details__title">
-                            <h3>Fate Stay Night: Unlimited Blade</h3>
+                            <h3 style="color: white;">@Model.Title</h3>
                             <span>フェイト／ステイナイト, Feito／sutei naito</span>
                         </div>
                         <div class="anime__details__rating">
@@ -43,17 +60,13 @@
                             </div>
                             <span>1.029 Votes</span>
                         </div>
-                        <p>
-                            Every human inhabiting the world of Alcia is branded by a “Count” or a number written on
-                            their body. For Hina’s mother, her total drops to 0 and she’s pulled into the Abyss,
-                            never to be seen again. But her mother’s last words send Hina on a quest to find a
-                            legendary hero from the Waste War - the fabled Ace!
-                        </p>
+                        <p style="color: white;">@Model.Description</p>
+
                         <div class="anime__details__widget">
                             <div class="row">
                                 <div class="col-lg-6 col-md-6">
                                     <ul>
-                                        <li><span>Type:</span> TV Series</li>
+                                        <li><span>Type:</span> @Model.Type</li>
                                         <li><span>Studios:</span> Lerche</li>
                                         <li><span>Date aired:</span> Oct 02, 2019 to ?</li>
                                         <li><span>Status:</span> Airing</li>
