@@ -1,0 +1,137 @@
+﻿@{
+    Layout = "Usershared/_UserLayout";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .payment-container {
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .payment-container label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .payment-container input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .payment-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .payment-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .payment-status {
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .payment-status a {
+            color: #007bff;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+        .payment-status a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <h2>Thanh toán</h2>
+
+        <form id="paymentForm">
+            <div>
+                <label for="userId">User ID:</label>
+                <input type="number" id="userId" name="userId" required placeholder="Nhập User ID">
+            </div>
+            <div>
+                <label for="amount">Số tiền:</label>
+                <input type="number" id="amount" name="amount" value="10000" required readonly>
+            </div>
+            <button type="submit" id="paymentBtn">Thanh toán</button>
+            
+        </form>
+
+        <div class="payment-status" id="paymentStatus">
+            <h3>Thông tin thanh toán:</h3>
+            <p id="statusMessage"></p>
+            <a id="checkoutUrl" href="" target="_blank">Click here to make the payment</a>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Xử lý form submit
+            $('#paymentForm').on('submit', function(event) {
+                event.preventDefault();
+
+                var userId = $('#userId').val();
+                var amount = $('#amount').val();
+
+                $.ajax({
+                    url: "https://localhost:7016/api/Payment/create", // Đảm bảo URL đúng
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        Id: userId,
+                        Amount: amount
+                    }),
+                    success: function(response) {
+                        $('#paymentStatus').show();
+                        $('#statusMessage').text('Vui lòng hoàn tất giao dịch');
+                        $('#checkoutUrl').attr('href', response.checkoutUrl);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("Lỗi khi tạo liên kết thanh toán: " + textStatus);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
