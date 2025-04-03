@@ -101,13 +101,12 @@ namespace HaitenWebClient.Controllers
             return View();
         }
 
-        public async Task<IActionResult> MangaDetails(int? id)
+        public async Task<IActionResult> MangaDetails(int id)
         {
-            int mangaId = id ?? 1;
-            int userId = 1; // Có thể lấy từ session hoặc token
+            int mangaId = id ;
 
             // Gọi API để lấy thông tin Manga
-            var response = await _httpClient.GetAsync($"https://localhost:7016/api/Manga/{mangaId}?userId={userId}");
+            var response = await _httpClient.GetAsync($"https://localhost:7016/api/Manga/{mangaId}");
             if (!response.IsSuccessStatusCode)
             {
                 return NotFound("Không tìm thấy manga");

@@ -5,6 +5,7 @@ using HaitenWebAPI.DTOs.ChapterText;
 using HaitenWebAPI.DTOs.Comment;
 using HaitenWebAPI.DTOs.Genres;
 using HaitenWebAPI.DTOs.Manga;
+using HaitenWebAPI.DTOs.Rate;
 using HaitenWebAPI.DTOs.User;
 using HaitenWebAPI.DTOs.UserMangaList;
 
@@ -64,6 +65,9 @@ namespace HaitenWebAPI
             .ForMember(dest => dest.PaymentStatus, opt => opt.MapFrom(src => src.PaymentStatus))
             .ForMember(dest => dest.AmountPaid, opt => opt.MapFrom(src => src.AmountPaid))
             .ReverseMap();
+
+            CreateMap<Rate, RateDTO>().ReverseMap(); 
+            CreateMap<RateDTO, Rate>().ReverseMap(); 
         }
 
     }

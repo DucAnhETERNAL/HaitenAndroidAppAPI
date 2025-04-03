@@ -21,5 +21,11 @@ namespace Repository.Repo
         public async Task Update(Rate rate) => await _rateDAO.Update(rate);
 
         public async Task Delete(int id) => await _rateDAO.Delete(id);
+
+        public async Task<IEnumerable<Rate>> GetByMangaId(int mangaId)
+        {
+            return await RateDAO.Instance.GetByMangaId(mangaId);
+        }
+
     }
 }

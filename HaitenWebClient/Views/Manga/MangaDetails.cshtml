@@ -5,6 +5,272 @@
 }
 
 
+<style>
+    .rating {
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .star {
+        color: gray;
+    }
+
+        .star.selected {
+            color: gold;
+        }
+
+    .star {
+        color: gray;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+        .star.checked {
+            color: gold;
+        }
+
+        .rating i {
+    color: gray;
+}
+
+.rating i.checked {
+    color: gold;
+}
+
+    .rating .star {
+        color: gray;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+        .rating .star:hover {
+            color: lightgray; /* Màu xám nhạt khi hover */
+        }
+
+        .rating .star.selected {
+            color: gold;
+        }
+
+    .rating i.checked {
+        color: gold;
+    }
+</style>
+<!-- Nhúng jQuery trước khi dùng -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<p id="userIdDisplay" style="color: white;"></p>
+<input type="hidden" id="userId" />
+<script>
+    $(document).ready(function () {
+        const jwtToken = localStorage.getItem("jwtToken");
+
+        if (!jwtToken) {
+            console.error("Không tìm thấy JWT Token. Chuyển hướng đến trang đăng nhập.");
+            window.location.href = '/login';
+            return;
+        }
+
+        $.ajax({
+            url: "https://localhost:7016/api/google-login/profile",
+            type: "GET",
+            headers: {
+                Authorization: `Bearer ${jwtToken}`
+            },
+        success: function (response) {
+            if (!response || !response.id) {
+                console.error("Lỗi: API không trả về userId.");
+                window.location.href = '/login';
+                return;
+            }
+
+            const userId = response.id;
+            console.log("✅ User ID nhận được:", userId);
+
+            // Gán userId vào input hidden
+            $('#userId').val(userId);
+
+            // Hiển thị userId trên UI
+            $('#userIdDisplay').text("User ID: " + userId);
+
+            // Load danh sách manga
+            loadPersonalMangaList(userId);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("Lỗi khi gọi API profile:", textStatus, errorThrown);
+            window.location.href = '/login';
+        }
+            });
+        });
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#followBtn").click(function (e) {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ <a>
+
+            const userId = $("#userId").val(); // Lấy userId từ input hidden
+            const mangaId = @mangaId; // Lấy mangaId từ ViewData
+
+            if (!userId) {
+                alert("Vui lòng đăng nhập để theo dõi!");
+                return;
+            }
+
+            const jwtToken = localStorage.getItem("jwtToken"); // Lấy JWT Token từ Local Storage
+
+            $.ajax({
+                url: "https://localhost:7016/api/PersonalList/add",
+                type: "POST",
+                contentType: "application/json",
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                },
+            data: JSON.stringify({
+                userId: userId,
+                mangaId: mangaId,
+                isFavorite: true // Truyền thêm isFavorite = true
+            }),
+            success: function (response) {
+                alert("Đã thêm vào danh sách yêu thích!");
+                $("#followBtn i").removeClass("fa-heart-o").addClass("fa-heart"); // Đổi icon thành trái tim đầy
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Lỗi khi thêm vào danh sách yêu thích:", textStatus, errorThrown);
+                alert("Có lỗi xảy ra, vui lòng thử lại!");
+            }
+                    });
+                });
+            });
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        // Sự kiện chọn sao
+        $(".star").click(function () {
+            var ratingValue = $(this).data("value");
+
+            // Xóa tất cả các lớp "selected" cũ
+            $(".star").removeClass("selected");
+
+            // Thêm lớp "selected" vào sao hiện tại và tất cả các sao trước nó
+            $(".star").each(function () {
+                if ($(this).data("value") <= ratingValue) {
+                    $(this).addClass("selected");
+                }
+            });
+
+            // Cập nhật giá trị đã chọn vào input hidden
+            $("#selectedRating").val(ratingValue);
+        });
+
+        const mangaId = @mangaId; // Lấy mangaId từ Razor hoặc View
+
+        // 🔹 Gọi API để lấy danh sách đánh giá khi trang tải lên
+        function loadReviews() {
+            $.ajax({
+                url: `https://localhost:7016/api/Rating/${mangaId}`,
+                type: "GET",
+                contentType: "application/json",
+                success: function (response) {
+                    $("#reviewList").empty(); // Xóa danh sách cũ trước khi hiển thị mới
+
+                    if (response.length === 0) {
+                        $("#reviewList").append("<p>Chưa có đánh giá nào.</p>");
+                        return;
+                    }
+
+                    // Duyệt qua danh sách đánh giá và thêm vào giao diện
+                    response.forEach(review => {
+                        $("#reviewList").append(`
+                            <div class="anime__review__item">
+                                <div class="anime__review__item__pic">
+                                    <img src="${review.userAvatar || 'img/anime/review-placeholder.jpg'}" alt=""/>
+                                </div>
+                                <div class="anime__review__item__text">
+                                    <h6>${review.userName} - <span>${new Date(review.createdAt).toLocaleString()}</span></h6>
+                                    <div class="rating">${generateStars(review.rating)}</div>
+                                    <p>${review.comment}</p>
+                                </div>
+                            </div>
+                        `);
+
+                    });
+                },
+                error: function () {
+                    alert("Không thể tải đánh giá. Vui lòng thử lại!");
+                }
+            });
+        }
+
+        // 🔹 Hàm tạo HTML cho số sao
+        function generateStars(rating) {
+            let starsHtml = "";
+            for (let i = 1; i <= 5; i++) {
+                starsHtml += `<i class="fa fa-star ${i <= rating ? 'checked' : ''}"></i>`;
+            }
+            return starsHtml;
+        }
+
+
+
+        // Gọi API khi trang tải lên
+        loadReviews();
+
+        // 🔹 Xử lý khi gửi đánh giá mới
+        $("#reviewForm").submit(function (e) {
+            e.preventDefault();
+            const userId = $("#userId").val();
+            const rating = $("#selectedRating").val();
+            const comment = $("#commentText").val();
+            const jwtToken = localStorage.getItem("jwtToken");
+
+            if (!userId) {
+                alert("Vui lòng đăng nhập để đánh giá!");
+                return;
+            }
+
+            if (rating == 0) {
+                alert("Vui lòng chọn số sao!");
+                return;
+            }
+
+            $.ajax({
+                url: "https://localhost:7016/api/Rating/add",
+                type: "POST",
+                contentType: "application/json",
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                },
+            data: JSON.stringify({
+                userId: userId,
+                mangaId: mangaId,
+                rating: rating,
+                comment: comment || "No comment",
+                createdAt: new Date().toISOString()
+            }),
+            success: function () {
+                alert("Cảm ơn bạn đã đánh giá!");
+                loadReviews(); // Cập nhật danh sách đánh giá mới
+                $("#commentText").val("");
+                $(".star").removeClass("selected");
+                $("#selectedRating").val("0");
+            },
+            error: function () {
+                alert("Có lỗi xảy ra, vui lòng thử lại!");
+            }
+                });
+            });
+        });
+</script>
+
+
+
 
 
 
@@ -31,7 +297,6 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="anime__details__pic set-bg" data-setbg="img/anime/details-pic.jpg">
-                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
                         <div class="view"><i class="fa fa-eye"></i> 9141</div>
                     </div>
                 </div>
@@ -39,17 +304,9 @@
                     <div class="anime__details__text">
                         <div class="anime__details__title">
                             <h3 style="color: white;">@Model.Title</h3>
-                        </div>
-                        <div class="anime__details__rating">
-                            <div class="rating">
-                                <a href="#"><i class="fa fa-star"></i></a>
-                                <a href="#"><i class="fa fa-star"></i></a>
-                                <a href="#"><i class="fa fa-star"></i></a>
-                                <a href="#"><i class="fa fa-star"></i></a>
-                                <a href="#"><i class="fa fa-star-half-o"></i></a>
                             </div>
-                            <span>1.029 Votes</span>
-                        </div>
+                            
+
                         <p style="color: white;">@Model.Description</p>
 
                         <div class="anime__details__widget">
@@ -98,7 +355,9 @@
                         </div>
 
                         <div class="anime__details__btn">
-                            <a href="#" class="follow-btn"><i class="fa fa-heart-o"></i> Follow</a>
+                            <a href="#" class="follow-btn" id="followBtn">
+                                <i class="fa fa-heart-o"></i> Follow
+                            </a>
                             <a href="#" class="watch-btn">
                                 <span>Watch Now</span> <i class="fa fa-angle-right"></i>
                             </a>
@@ -120,9 +379,7 @@
                             <a href="@Url.Action("ReaddingMangaText", "Manga", new { chapterId = chap.Id })" class="text-decoration-none text-light">
                                 @chap.Name
                             </a>
-                            <span class="badge badge-pill @(chap.Status ? "badge-success" : "badge-warning")">
-                                @(chap.Status ? "Đã đọc" : "Chưa đọc")
-                            </span>
+                            
                         </li>
                     }
                 </ul>
@@ -135,104 +392,33 @@
                     <div class="section-title">
                         <h5>Reviews</h5>
                     </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-1.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                            <p>
-                                whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL
-                            </p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-2.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                            <p>Finally it came out ages ago</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-3.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                            <p>Where is the episode 15 ? Slow update! Tch</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-4.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                            <p>
-                                whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL
-                            </p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-5.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                            <p>Finally it came out ages ago</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-6.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                            <p>Where is the episode 15 ? Slow update! Tch</p>
-                        </div>
+                    <div id="reviewList">
+                        <!-- Danh sách đánh giá sẽ được thêm bằng JavaScript -->
                     </div>
                 </div>
+
                 <div class="anime__details__form">
                     <div class="section-title">
-                        <h5>Your Comment</h5>
+                        <div id="pagination" style="text-align: center;">
+                            <!-- Các nút phân trang sẽ được thêm vào đây -->
+                        </div>
+
+                        <h5>Your Review</h5>
                     </div>
-                    <form action="#">
-                        <textarea placeholder="Your Comment"></textarea>
+                    <form id="reviewForm">
+                        <div class="rating" data-rating="${review.rating}">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                        <input type="hidden" id="selectedRating" value="0">
+                        <textarea id="commentText" placeholder="Your Comment"></textarea>
                         <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
                     </form>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4">
-                <div class="anime__details__sidebar">
-                    <div class="section-title">
-                        <h5>you might like...</h5>
-                    </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
-                        <div class="ep">18 / ?</div>
-                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                        <h5><a href="#">Boruto: Naruto next generations</a></h5>
-                    </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-2.jpg">
-                        <div class="ep">18 / ?</div>
-                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                        <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
-                    </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-3.jpg">
-                        <div class="ep">18 / ?</div>
-                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                        <h5><a href="#">Sword art online alicization war of underworld</a></h5>
-                    </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-4.jpg">
-                        <div class="ep">18 / ?</div>
-                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                        <h5><a href="#">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
+           
 </section>

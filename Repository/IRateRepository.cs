@@ -9,5 +9,7 @@ namespace Repository
 {
     public interface IRateRepository : IRepositoryBase<Rate>
     {
+        Task<IEnumerable<Rate>> GetByMangaId(int mangaId);
+
     }
 }

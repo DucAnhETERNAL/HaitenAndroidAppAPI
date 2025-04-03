@@ -1,0 +1,142 @@
+﻿@model IEnumerable<HaitenWebAPI.DTOs.UserMangaList.UserMangaListDTO>
+
+@{
+    Layout = "Usershared/_UserLayout";
+    ViewData["Title"] = "Personal Manga List";
+}
+
+<!-- Nhúng jQuery trước khi dùng -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<h2 style="color: white;">Personal Manga List</h2>
+
+<!-- Hiển thị userId -->
+<p id="userIdDisplay" style="color: white;"></p>
+<input type="hidden" id="userId" />
+
+<div id="mangaListContainer" style="color: white;">
+    @if (Model != null && Model.Any())
+    {
+        <table class="table" style="color: white;">
+            <thead>
+                <tr>
+                    <th>Manga ID</th>
+                    <th>Add Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+           
+        </table>
+    }
+    else
+    {
+        <p>Loading...</p>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        const jwtToken = localStorage.getItem("jwtToken");
+
+        if (!jwtToken) {
+            console.error("Không tìm thấy JWT Token. Chuyển hướng đến trang đăng nhập.");
+            window.location.href = '/login';
+            return;
+        }
+
+        $.ajax({
+            url: "https://localhost:7016/api/google-login/profile",
+            type: "GET",
+            headers: {
+                Authorization: `Bearer ${jwtToken}`
+            },
+            success: function (response) {
+                if (!response || !response.id) {
+                    console.error("Lỗi: API không trả về userId.");
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const userId = response.id;
+                console.log("✅ User ID nhận được:", userId);
+
+                // Gán userId vào input hidden
+                $('#userId').val(userId);
+
+                // Hiển thị userId trên UI
+                $('#userIdDisplay').text("User ID: " + userId);
+
+                // Load danh sách manga
+                loadPersonalMangaList(userId);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Lỗi khi gọi API profile:", textStatus, errorThrown);
+                window.location.href = '/login';
+            }
+        });
+    });
+
+
+    function loadPersonalMangaList(userId) {
+        $.ajax({
+            url: `https://localhost:7016/api/PersonalList/${userId}`,  // Sử dụng URL đúng như trong Swagger
+            type: "GET",
+            success: function (data) {
+                console.log("✅ Dữ liệu manga list đã tải thành công!");
+
+                // Hiển thị danh sách manga
+                let mangaListHTML =
+                    '<table class="table" style="color: white;">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>Manga Name</th>' +  // Thay đổi "Manga ID" thành "Manga Name"
+                    '<th>Add Date</th>' +
+                    '<th>Action</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
+
+                let completedRequests = 0;  // Đếm số yêu cầu đã hoàn thành
+
+                data.forEach(item => {
+                    // Gửi yêu cầu lấy thông tin manga theo mangaId
+                    $.ajax({
+                        url: `https://localhost:7016/api/Manga/${item.mangaId}`,  // Lấy thông tin manga
+                        type: "GET",
+                        success: function (mangaData) {
+                            completedRequests++;
+
+                            // Thêm thông tin manga vào bảng
+                            mangaListHTML += `<tr>
+                                    <td>${mangaData.title}</td>  <!-- Hiển thị mangaName -->
+                                    <td>${new Date(item.addedAt).toLocaleDateString()}</td>
+                                    <td>${item.isFavorite ? "❤️" : "❌"}</td>
+                                </tr>`;
+
+                            // Nếu tất cả các yêu cầu đã hoàn thành, cập nhật bảng
+                            if (completedRequests === data.length) {
+                                mangaListHTML += '</tbody></table>';
+                                $('#mangaListContainer').html(mangaListHTML);
+                            }
+                        },
+                        error: function () {
+                            completedRequests++;
+                            console.error(`❌ Không thể lấy thông tin manga với mangaId: ${item.mangaId}`);
+
+                            // Nếu tất cả các yêu cầu đã hoàn thành, cập nhật bảng
+                            if (completedRequests === data.length) {
+                                mangaListHTML += '</tbody></table>';
+                                $('#mangaListContainer').html(mangaListHTML);
+                            }
+                        }
+                    });
+                });
+            },
+            error: function () {
+                console.error("❌ Không thể tải danh sách manga.");
+                $('#mangaListContainer').html('<p>Không thể tải danh sách manga.</p>');
+            }
+        });
+    }
+
+</script>
