@@ -11,8 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const userName = response.userName;
                 const role = response.role;
 
-                localStorage.setItem("userId", userId);
-                localStorage.setItem("userName", userName);
+               
 
 
 

@@ -49,7 +49,9 @@ namespace HaitenWebAPI.Controllers.PersonalList
             {
                 UserId = request.UserId,
                 MangaId = request.MangaId,
-                IsFavorite = request.IsFavorite
+                IsFavorite = request.IsFavorite,
+                AddedAt = DateTime.Now 
+
             };
 
             // Call repository to add the manga to the user's list

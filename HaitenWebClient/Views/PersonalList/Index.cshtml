@@ -11,7 +11,6 @@
 <h2 style="color: white;">Personal Manga List</h2>
 
 <!-- Hiển thị userId -->
-<p id="userIdDisplay" style="color: white;"></p>
 <input type="hidden" id="userId" />
 
 <div id="mangaListContainer" style="color: white;">
@@ -134,7 +133,7 @@
             },
             error: function () {
                 console.error("❌ Không thể tải danh sách manga.");
-                $('#mangaListContainer').html('<p>Không thể tải danh sách manga.</p>');
+                $('#mangaListContainer').html('<p style="color: red;">Không có manga yêu thích.</p>');
             }
         });
     }

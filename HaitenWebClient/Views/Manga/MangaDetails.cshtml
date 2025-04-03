@@ -59,8 +59,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
-<p id="userIdDisplay" style="color: white;"></p>
 <input type="hidden" id="userId" />
+<input type="hidden" id="userName" /> <!-- 🆕 Thêm input ẩn userName -->
+
 <script>
     $(document).ready(function () {
         const jwtToken = localStorage.getItem("jwtToken");
@@ -77,74 +78,145 @@
             headers: {
                 Authorization: `Bearer ${jwtToken}`
             },
-        success: function (response) {
-            if (!response || !response.id) {
-                console.error("Lỗi: API không trả về userId.");
+            success: function (response) {
+                if (!response || !response.id || !response.userName) { // 🆕 Kiểm tra userName
+                    console.error("Lỗi: API không trả về userId hoặc userName.");
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const userId = response.id;
+                const userName = response.userName; // 🆕 Lấy userName
+
+                console.log("✅ User ID:", userId);
+                console.log("✅ User Name:", userName);
+
+                // Gán userId & userName vào input ẩn
+                $('#userId').val(userId);
+                $('#userName').val(userName); // 🆕 Gán userName vào input
+
+                // Hiển thị thông tin lên UI
+                $('#userIdDisplay').text("User ID: " + userId);
+                $('#userNameDisplay').text("User Name: " + userName); // 🆕 Hiển thị userName
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Lỗi khi gọi API profile:", textStatus, errorThrown);
                 window.location.href = '/login';
-                return;
             }
-
-            const userId = response.id;
-            console.log("✅ User ID nhận được:", userId);
-
-            // Gán userId vào input hidden
-            $('#userId').val(userId);
-
-            // Hiển thị userId trên UI
-            $('#userIdDisplay').text("User ID: " + userId);
-
-            // Load danh sách manga
-            loadPersonalMangaList(userId);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error("Lỗi khi gọi API profile:", textStatus, errorThrown);
-            window.location.href = '/login';
-        }
-            });
         });
+    });
 </script>
+
 
 
 
 <script>
     $(document).ready(function () {
-        $("#followBtn").click(function (e) {
-            e.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ <a>
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get("userId"); // Lấy giá trị userId
 
-            const userId = $("#userId").val(); // Lấy userId từ input hidden
-            const mangaId = @mangaId; // Lấy mangaId từ ViewData
+        console.log("UserId từ URL:", userId);
 
-            if (!userId) {
+
+        const mangaId = @mangaId; // Lấy mangaId từ ViewData
+        const jwtToken = localStorage.getItem("jwtToken"); // Lấy JWT Token từ Local Storage
+
+        if (!userId) {
+            $("#followBtn").click(function () {
                 alert("Vui lòng đăng nhập để theo dõi!");
-                return;
-            }
-
-            const jwtToken = localStorage.getItem("jwtToken"); // Lấy JWT Token từ Local Storage
-
-            $.ajax({
-                url: "https://localhost:7016/api/PersonalList/add",
-                type: "POST",
-                contentType: "application/json",
-                headers: {
-                    Authorization: `Bearer ${jwtToken}`
-                },
-            data: JSON.stringify({
-                userId: userId,
-                mangaId: mangaId,
-                isFavorite: true // Truyền thêm isFavorite = true
-            }),
-            success: function (response) {
-                alert("Đã thêm vào danh sách yêu thích!");
-                $("#followBtn i").removeClass("fa-heart-o").addClass("fa-heart"); // Đổi icon thành trái tim đầy
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error("Lỗi khi thêm vào danh sách yêu thích:", textStatus, errorThrown);
-                alert("Có lỗi xảy ra, vui lòng thử lại!");
-            }
-                    });
-                });
             });
+            return;
+        }
+
+        // 🟢 1. Kiểm tra trạng thái `isFavorite` từ API
+        $.ajax({
+            url: `https://localhost:7016/api/PersonalList/${userId}`,
+            type: "GET",
+            headers: {
+                Authorization: `Bearer ${jwtToken}`
+            },
+            success: function (response) {
+                const manga = response.find(item => item.mangaId === mangaId);
+                if (manga && manga.isFavorite === true) {
+                    $("#followBtn i").removeClass("fa-heart-o").addClass("fa-heart"); // Trái tim đầy
+                    $("#followBtn").attr("data-userMangaListId", manga.id); // Lưu ID vào button
+                } else {
+                    $("#followBtn i").removeClass("fa-heart").addClass("fa-heart-o"); // Trái tim trống
+                }
+            },
+            error: function () {
+                console.error("Lỗi khi lấy danh sách yêu thích.");
+            }
+        });
+
+        $("#followBtn").click(function (e) {
+            e.preventDefault();
+            const isFavorite = $("#followBtn i").hasClass("fa-heart");
+            const userMangaListId = $("#followBtn").attr("data-userMangaListId"); // Lấy ID từ button
+
+            if (isFavorite) {
+                // 🛑 Gọi API remove nếu đang là yêu thích
+                $.ajax({
+                    url: `https://localhost:7016/api/PersonalList/remove/${userMangaListId}`,
+                    type: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${jwtToken}`
+                    },
+                    success: function () {
+                        alert("Đã xóa khỏi danh sách yêu thích!");
+                        $("#followBtn i").removeClass("fa-heart").addClass("fa-heart-o"); // Đổi icon thành trái tim trống
+                        $("#followBtn").removeAttr("data-userMangaListId"); // Xóa ID
+                    },
+                    error: function () {
+                        alert("Có lỗi xảy ra khi xóa !");
+                    }
+                });
+            } else {
+                // ✅ Gọi API add nếu chưa yêu thích
+                $.ajax({
+                    url: "https://localhost:7016/api/PersonalList/add",
+                    type: "POST",
+                    contentType: "application/json",
+                    headers: {
+                        Authorization: `Bearer ${jwtToken}`
+                    },
+                    data: JSON.stringify({
+                        userId: userId,
+                        mangaId: mangaId,
+                        isFavorite: true,
+                        AddedAt: new Date().toISOString()
+
+                    }),
+                    success: function (response) {
+                        alert("Đã thêm vào danh sách yêu thích!");
+                        $("#followBtn i").removeClass("fa-heart-o").addClass("fa-heart"); // Đổi icon thành trái tim đầy
+                        $("#followBtn").attr("data-userMangaListId", response.id); // Lưu ID mới
+                    },
+                    error: function () {
+                        alert("Có lỗi xảy ra, vui lòng thử lại!");
+                    }
+                });
+            }
+        });
+    });
+
+    function formatDateTime(input) {
+        const date = new Date(input);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+
+    const formattedDate = formatDateTime("2025-04-03T10:18:06.2036252");
+    console.log(formattedDate);  // Output: 2025-04-03 10:18
+
+
 </script>
+
 
 
 
@@ -185,21 +257,20 @@
                         return;
                     }
 
-                    // Duyệt qua danh sách đánh giá và thêm vào giao diện
+                    // 🔹 Duyệt qua danh sách đánh giá và hiển thị
                     response.forEach(review => {
                         $("#reviewList").append(`
-                            <div class="anime__review__item">
-                                <div class="anime__review__item__pic">
-                                    <img src="${review.userAvatar || 'img/anime/review-placeholder.jpg'}" alt=""/>
-                                </div>
-                                <div class="anime__review__item__text">
-                                    <h6>${review.userName} - <span>${new Date(review.createdAt).toLocaleString()}</span></h6>
-                                    <div class="rating">${generateStars(review.rating)}</div>
-                                    <p>${review.comment}</p>
-                                </div>
+                        <div class="anime__review__item">
+                            <div class="anime__review__item__pic">
+                                <img src="${review.userAvatar || 'img/anime/review-placeholder.jpg'}" alt=""/>
                             </div>
-                        `);
-
+                            <div class="anime__review__item__text">
+                                <h6>${review.userName || 'Ẩn danh'} - <span>${new Date(review.createdAt).toLocaleString()}</span></h6>
+                                <div class="rating">${generateStars(review.rating)}</div>
+                                <p>${review.comment}</p>
+                            </div>
+                        </div>
+                    `);
                     });
                 },
                 error: function () {
@@ -339,16 +410,11 @@
 
 
                                         
-                                        <li><span>Status:</span> @Model.Status</li>
                                     </ul>
                                 </div>
                                 <div class="col-lg-6 col-md-6">
                                     <ul>
-                                        <li><span>Scores:</span> 7.31 / 1,515</li>
-                                        <li><span>Rating:</span> 8.5 / 161 times</li>
-                                        <li><span>Duration:</span> 24 min/ep</li>
-                                        <li><span>Quality:</span> HD</li>
-                                        <li><span>Views:</span> 131,541</li>
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -358,9 +424,7 @@
                             <a href="#" class="follow-btn" id="followBtn">
                                 <i class="fa fa-heart-o"></i> Follow
                             </a>
-                            <a href="#" class="watch-btn">
-                                <span>Watch Now</span> <i class="fa fa-angle-right"></i>
-                            </a>
+                            
                         </div>
                     </div>
                 </div>
@@ -390,8 +454,8 @@
             <div class="col-lg-8 col-md-8">
                 <div class="anime__details__review">
                     <div class="section-title">
-                        <h5>Reviews</h5>
                     </div>
+
                     <div id="reviewList">
                         <!-- Danh sách đánh giá sẽ được thêm bằng JavaScript -->
                     </div>
