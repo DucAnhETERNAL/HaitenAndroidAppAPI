@@ -1,39 +1,57 @@
-﻿<h2>Danh sách hình ảnh</h2>
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2 class="text-center text-primary">Danh sách hình ảnh</h2>
 
 @if (!string.IsNullOrEmpty(ViewBag.Message))
 {
-    <p>@ViewBag.Message</p>
+        <div class="alert alert-info text-center">@ViewBag.Message</div>
 }
 
-@foreach (var image in Model)
-{
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="@image.ImageUrl" alt="Chapter Image" style="width: 100%; max-width: 600px;">
-        <p>Vị trí: @image.Position</p>
+<div class="container">
+    <div class="row">
+        @foreach (var image in Model)
+        {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm">
+                        <img src="@image.ImageUrl" class="card-img-top" alt="Chapter Image">
+                        <div class="card-body text-center">
+                            <p class="card-text"><strong>Vị trí:</strong> @image.Position</p>
 
-        <!-- Các nút Update và Delete -->
-        <form asp-action="UpdateImage" method="post" enctype="multipart/form-data" style="display: inline;">
-            <input type="file" name="Image" />
-            <input type="hidden" name="Id" value="@image.Id" /> <!-- Đảm bảo truyền Id của ảnh -->
-            <button type="submit">Cập nhật</button>
-        </form>
+                            <form asp-action="UpdateImage" method="post" enctype="multipart/form-data" class="d-inline-block">
+                                <input type="file" name="Image" class="form-control mb-2" />
+                                <input type="hidden" name="Id" value="@image.Id" />
+                                <button type="submit" class="btn btn-warning btn-sm">Cập nhật</button>
+                            </form>
 
-
-        <form asp-action="DeleteImage" method="post" style="display: inline;">
-            <input type="hidden" name="Id" value="@image.Id" />
-            <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa ảnh này?')">Xóa</button>
-        </form>
+                            <form asp-action="DeleteImage" method="post" class="d-inline-block">
+                                <input type="hidden" name="Id" value="@image.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa ảnh này?')">Xóa</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        }
     </div>
-}
+</div>
 
 <!-- Form tải lên ảnh mới -->
-<form asp-action="UploadImage" method="post" enctype="multipart/form-data">
-    <label>Chọn hình ảnh:</label>
-    <input type="file" name="Image" required />
-    <select name="ChapterId">
-        <option value="1">Chapter 1</option>
-        <option value="2">Chapter 2</option>
-        <option value="3">Chapter 3</option>
-    </select>
-    <button type="submit">Tải lên</button>
-</form>
+<div class="container mt-4">
+    <div class="card p-4 shadow-sm">
+        <h4 class="text-center text-success">Tải lên hình ảnh mới</h4>
+        <form asp-action="UploadImage" method="post" enctype="multipart/form-data" class="text-center">
+            <div class="mb-3">
+                <label class="form-label">Chọn hình ảnh:</label>
+                <input type="file" name="Image" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Chọn Chapter:</label>
+                <select name="ChapterId" class="form-select">
+                    <option value="1">Chapter 1</option>
+                    <option value="2">Chapter 2</option>
+                    <option value="3">Chapter 3</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Tải lên</button>
+        </form>
+    </div>
+</div>
