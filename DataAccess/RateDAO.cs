@@ -53,5 +53,14 @@ namespace DataAccess
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<IEnumerable<Rate>> GetByMangaId(int mangaId)
+        {
+            return await _context.Rates
+                .Where(r => r.MangaId == mangaId)
+                .Include(r => r.User)  // Nếu bạn muốn hiển thị thông tin người dùng
+                .ToListAsync();
+        }
+
     }
 }

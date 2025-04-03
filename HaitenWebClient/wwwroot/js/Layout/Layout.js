@@ -9,6 +9,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Lấy thông tin người dùng từ phản hồi
                 const userName = response.userName;
                 const role = response.role;
+                const userId = response.userId;
+                localStorage.setItem("userId", userId);
+                localStorage.setItem("userName", userName);
+
+
+
                 // Hiển thị tên người dùng trong dropdown
                 const userInfoNav = document.getElementById("userInfoNav");
                 const loginNav = document.getElementById("loginNav");
@@ -37,6 +43,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Không thể lấy thông tin người dùng:", error);
     
             });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const jwtToken = localStorage.getItem("jwtToken");
+
+            if (jwtToken) {
+                ApiService.get("google-login/profile", {}, { Authorization: `Bearer ${jwtToken}` })
+                    .then(response => {
+                        const userId = response.userId;
+                        localStorage.setItem("userId", userId);
+                        sessionStorage.setItem("userId", userId);  // Lưu userId vào session
+
+                        const userName = response.userName;
+                        localStorage.setItem("userName", userName);
+                        sessionStorage.setItem("userName", userName);  
+
+
+                    })
+                    .catch(error => {
+                        console.error("Không thể lấy thông tin người dùng:", error);
+                    });
+            }
+        });
+
     }
     // Handle logout
     const handleLogout = () => {

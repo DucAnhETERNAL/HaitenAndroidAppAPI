@@ -62,5 +62,24 @@ namespace HaitenWebAPI.Controllers.Rating
 
             return Ok(new { message = "Rating and comment added successfully." });
         }
+
+        [HttpGet("{mangaId}")]
+        public async Task<IActionResult> GetRatingsByMangaId(int mangaId)
+        {
+            // Kiểm tra manga có tồn tại không
+            var manga = await _mangaRepository.GetById(mangaId);
+            if (manga == null)
+            {
+                return NotFound("Manga not found.");
+            }
+
+            // Lấy danh sách đánh giá từ repository
+            var ratings = await _ratingRepository.GetByMangaId(mangaId);
+
+            // Chuyển đổi sang DTO để trả về
+            var ratingDTOs = _mapper.Map<IEnumerable<RateDTO>>(ratings);
+
+            return Ok(ratingDTOs);
+        }
     }
 }

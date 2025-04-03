@@ -18,7 +18,8 @@ namespace HaitenWebAPI.DTOs.Manga
         public string Status { get; set; }
         public List<ChapterListDTO> Chapters { get; set; }
         public List<GenresDTO> Genres { get; set; }
-        //public List<CommentDTO> Comments { get; set; }
+        public double AverageRating { get; set; }  
+
 
 
 

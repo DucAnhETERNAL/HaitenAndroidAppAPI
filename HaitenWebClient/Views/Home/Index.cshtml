@@ -405,6 +405,53 @@
     </section>
     <!-- Active Manga Section End -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <input type="hidden" id="userId" />
+
+    <script>
+        $(document).ready(function () {
+            const jwtToken = localStorage.getItem("jwtToken");
+
+            if (!jwtToken) {
+                console.error("Không tìm thấy JWT Token. Chuyển hướng đến trang đăng nhập.");
+                return;
+            }
+
+            // Gọi API để lấy thông tin người dùng (userId)
+            $.ajax({
+                url: "https://localhost:7016/api/google-login/profile",
+                type: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                },
+                success: function (response) {
+                    if (!response || !response.id) {
+                        console.error("Lỗi: API không trả về userId.");
+                        return;
+                    }
+
+                    const userId = response.id;
+                    console.log("✅ User ID nhận được:", userId);
+
+                    // Gán userId vào input hidden
+                    $('#userId').val(userId);
+
+                    // Hiển thị userId trên UI
+                    $('#userIdDisplay').text("User ID: " + userId);
+
+                    // Load danh sách manga
+                    loadPersonalMangaList(userId);
+
+                    // Sau khi có userId, gọi setupFollowButton để xử lý nút follow
+                    setupFollowButton(userId);  // Gọi hàm xử lý nút follow sau khi có userId
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Lỗi khi gọi API profile:", textStatus, errorThrown);
+                }
+            });
+        });
+    </script>
+
+
     <script>
         // Function to get active manga list using AJAX
         function getActiveManga() {
@@ -422,12 +469,14 @@
 
                         // Loop through each manga and create the HTML for it
                         response.forEach(function(manga) {
+                            const userId = $('#userId').val();
+
                             mangaListHtml += `
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item">
                                         <div class="product__item__text">
-                                                <h5><a href="/Manga/MangaDetails/${manga.id}">${manga.title}</a></h5>
-                                                    <ul>
+                                                <h5><a href="/Manga/MangaDetails/${manga.id}?userId=${userId}">${manga.title}</a></h5>
+                                                            <ul>
                                                 <li>Genre: ${manga.genreName}</li>
                                                 <li>Average Rating: ${manga.averageRating}</li>
                                             </ul>
