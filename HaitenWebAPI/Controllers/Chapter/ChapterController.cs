@@ -24,7 +24,7 @@ namespace HaitenWebAPI.Controllers.ChapterCT
         }
 
         // POST: api/chapter
-        [HttpPost]
+        [HttpPost] //https://localhost:7016/api/chapter
         public async Task<ActionResult<ChapterDTO>> AddChapter([FromBody] AddChapterRequestDTO chapterRequest)
         {
             // Validate input
@@ -60,11 +60,28 @@ namespace HaitenWebAPI.Controllers.ChapterCT
             // Return the newly created chapter
             return CreatedAtAction(nameof(GetChapterById), new { id = chapter.Id }, chapterDto);
         }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ChapterDTO>>> GetAllChapters([FromQuery] int? mangaId)
+        {
+            IEnumerable<Chapter> chapters;
+
+            if (mangaId.HasValue)
+            {
+                chapters = await _chapterRepository.GetByMangaId(mangaId.Value);
+            }
+            else
+            {
+                chapters = await _chapterRepository.GetAll();
+            }
+
+            var chapterDtos = _mapper.Map<IEnumerable<ChapterDTO>>(chapters);
+            return Ok(chapterDtos);
+        }
 
 
 
         // A sample method to get a chapter by ID (you would implement this method as well)
-        [HttpGet("{id}")]
+        [HttpGet("{id}")] //https://localhost:7016/api/chapter/1
         public async Task<ActionResult<ChapterDTO>> GetChapterById(int id)
         {
             var chapter = await _chapterRepository.GetById(id);

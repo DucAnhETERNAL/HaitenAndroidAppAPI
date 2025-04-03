@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "Usershared/_UserLayout";
+}
+@{
+    ViewData["Title"] = "Chapter List";
+}
+
+<h2 style="color: white;">Chapter List for Manga ID: @ViewData["MangaId"]</h2>
+
+<!-- Nút Đọc từ đầu -->
+<a href="@Url.Action("Index", "ChapterImages", new { mangaId = ViewData["MangaId"] })" class="btn btn-primary" style="margin-bottom: 20px;">
+    Đọc từ đầu
+</a>
+
+<table class="table" style="color: white;">
+    <thead>
+        <tr>
+            <th style="color: white;">Name</th>
+            <th style="color: white;">Status</th>
+            <th style="color: white;">View Count</th>
+            <th style="color: white;">Actions</th>
+        </tr>
+    </thead>
+    <tbody id="chapterTableBody">
+        <tr><td colspan="4" style="color: white;">Loading...</td></tr>
+    </tbody>
+</table>
+
+<script src="~/js/chapter.js"></script>
+<script>
+    // Lấy mangaId từ query string và tải danh sách các chapter
+    const mangaId = new URLSearchParams(window.location.search).get("mangaId");
+    if (mangaId) {
+        loadChapters(mangaId);  // Gọi hàm loadChapters và truyền MangaId vào
+    }
+</script>

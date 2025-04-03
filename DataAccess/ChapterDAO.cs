@@ -27,7 +27,12 @@ namespace DataAccess
                 .Include(c => c.ReadingHistories)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
-
+        public async Task<IEnumerable<Chapter>> GetByMangaId(int mangaId)
+        {
+            return await _context.Chapters
+                                 .Where(c => c.MangaId == mangaId)
+                                 .ToListAsync();
+        }
         public async Task Add(Chapter chapter)
         {
             _context.Chapters.Add(chapter);

@@ -11,8 +11,15 @@ namespace HaitenWebClient.Controllers
             _httpClient = httpClient;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int mangaId)
         {
+            // Logic để tải trang ChapterImages dựa trên MangaId
+            // Giả sử bạn muốn làm gì đó với MangaId ở đây
+
+            // Truyền MangaId vào ViewData
+            ViewData["MangaId"] = mangaId;
+
+            // Return view của bạn (có thể là một trang khác chứa hình ảnh chapters)
             return View();
         }
     }

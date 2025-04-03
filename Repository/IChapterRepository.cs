@@ -9,5 +9,7 @@ namespace Repository
 {
     public interface IChapterRepository : IRepositoryBase<Chapter>
     {
+        Task<IEnumerable<Chapter>> GetByMangaId(int mangaId);
+
     }
 }

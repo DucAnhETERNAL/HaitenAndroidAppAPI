@@ -1,5 +1,6 @@
 ﻿using BussinessLayer;
 using DataAccess;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,10 @@ namespace Repository.Repo
         public async Task Update(Chapter chapter) => await _chapterDAO.Update(chapter);
 
         public async Task Delete(int id) => await _chapterDAO.Delete(id);
+        public async Task<IEnumerable<Chapter>> GetByMangaId(int mangaId)
+        {
+            return await ChapterDAO.Instance.GetByMangaId(mangaId);
+        }
+
     }
 }

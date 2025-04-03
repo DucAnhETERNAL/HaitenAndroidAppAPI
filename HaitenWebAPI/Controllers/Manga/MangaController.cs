@@ -34,7 +34,7 @@ namespace HaitenWebAPI.Controllers.MangaDT
             return Ok(ListMangaDto);
         }
         [HttpGet]
-        [EnableQuery]
+        [EnableQuery] //https://localhost:7016/api/manga
         public async Task<ActionResult<IQueryable<MangaListDTO>>> GetAll()  
         {
             var ListManga = await _mangaRepository.GetAll();
