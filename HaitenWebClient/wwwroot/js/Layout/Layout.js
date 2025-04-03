@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ApiService.get("google-login/profile", {}, { Authorization: `Bearer ${jwtToken}` })
             .then(response => {
                 // Lấy thông tin người dùng từ phản hồi
-                const userId = response.userId;
+                const userId = response.id;
                 const userName = response.userName;
                 const role = response.role;
                 localStorage.setItem("userId", userId);
