@@ -90,7 +90,7 @@ namespace HaitenWebAPI.Controllers.Payment
 
                 await _userRepository.UpdatePaymentStatus(userId, "Yes", fixedAmount);
 
-                return Ok(new { message = $"Thanh toán thành công cho người dùng {userId}", amountPaid = fixedAmount });
+                return Redirect("https://localhost:7245/");
             }
             catch (Exception ex)
             {

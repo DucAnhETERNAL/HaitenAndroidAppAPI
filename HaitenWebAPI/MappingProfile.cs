@@ -66,8 +66,9 @@ namespace HaitenWebAPI
             .ForMember(dest => dest.AmountPaid, opt => opt.MapFrom(src => src.AmountPaid))
             .ReverseMap();
 
-            CreateMap<Rate, RateDTO>().ReverseMap(); 
-            CreateMap<RateDTO, Rate>().ReverseMap(); 
+            CreateMap<Rate, RateDTO>()
+             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName)); // Ánh xạ UserName từ User
+            CreateMap<RateDTO, Rate>();
         }
 
     }
