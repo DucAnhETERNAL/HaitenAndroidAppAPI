@@ -1,0 +1,93 @@
+﻿@model int // Nhận ID của manga từ action
+
+@{
+    ViewData["Title"] = "Chi tiết Manga";
+    Layout = "Adminshared/_AdminLayout";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Chi tiết Manga</h2>
+
+    <!-- Thông tin Manga -->
+    <div class="card shadow-sm p-4 mb-4">
+        <h3>Thông tin Manga</h3>
+        <div id="mangaDetails">
+            <p><strong>ID:</strong> <span id="mangaId"></span></p>
+            <p><strong>Tên Manga:</strong> <span id="mangaTitle"></span></p>
+            <p><strong>Tác giả:</strong> <span id="mangaAuthor"></span></p>
+            <p><strong>Mô tả:</strong> <span id="mangaDescription"></span></p>
+            <p><strong>Loại:</strong> <span id="mangaType"></span></p>
+            <p><strong>Thể loại:</strong> <span id="mangaGenre"></span></p>
+            <p><strong>Trạng thái:</strong> <span id="mangaStatus"></span></p>
+        </div>
+    </div>
+
+    <!-- Danh sách Chapter -->
+    <div class="card shadow-sm p-4 mb-4">
+        <h3>Danh sách Chapter</h3>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Chapter</th>
+                    <th>Trạng thái</th>
+                    <th>Lượt xem</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="chapterTableBody">
+                <!-- Dữ liệu chapter sẽ được đổ vào đây bằng JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Form thêm Chapter -->
+    <div class="card shadow-sm p-4">
+        <h3>Thêm Chapter Mới</h3>
+        <form id="addChapterForm">
+            <input type="hidden" id="mangaIdForChapter" value="@Model">
+            <div class="form-group">
+                <label for="chapterName">Tên Chapter:</label>
+                <input type="text" id="chapterName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="chapterContent">Nội dung Chapter:</label>
+                <textarea id="chapterContent" class="form-control" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="chapterStatus">Trạng thái:</label>
+                <select id="chapterStatus" class="form-control" required>
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary mt-3" onclick="handleAddChapter()">Thêm Chapter</button>
+        </form>
+    </div>
+    <!-- Modal Chỉnh sửa Chapter -->
+    <div id="editChapterModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditChapterModal()">×</span>
+            <h3 class="modal-title">Chỉnh sửa Chapter</h3>
+            <form id="editChapterForm">
+                <input type="hidden" id="editChapterId" value="">
+                <div class="form-group">
+                    <label for="editChapterName">Tên Chapter:</label>
+                    <input type="text" id="editChapterName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editChapterContent">Nội dung Chapter:</label>
+                    <textarea id="editChapterContent" class="form-control" rows="5" required></textarea>
+                </div>
+                
+                <button type="button" class="btn btn-primary mt-3" onclick="handleEditChapter()">Lưu</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- CSS tùy chỉnh -->
+<link rel="stylesheet" href="/css/modal.css">
+
+<!-- JavaScript -->
+<script type="module" src="/js/Manga/DetailManga.js"></script>

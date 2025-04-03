@@ -137,6 +137,7 @@ namespace HaitenWebAPI.Controllers.MangaDT
             // Update the manga's properties from the request DTO
             existingManga.Title = mangaEditRequest.Title ?? existingManga.Title; // Optional: Only update if not null
             existingManga.Description = mangaEditRequest.Description ?? existingManga.Description;
+            existingManga.Author = mangaEditRequest.Author;
             existingManga.GenreId = mangaEditRequest.GenreId;
             existingManga.Status = mangaEditRequest.Status;
 

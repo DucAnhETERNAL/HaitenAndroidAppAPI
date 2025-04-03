@@ -8,5 +8,12 @@ namespace HaitenWebClient.Controllers
         {
             return View();
         }
+        public IActionResult DetailAndAddChapter(int id)
+        {
+            
+            return View(id); 
+        }
+
+
     }
 }
