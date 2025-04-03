@@ -70,6 +70,7 @@ namespace HaitenWebAPI
              .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName)); // Ánh xạ UserName từ User
             CreateMap<RateDTO, Rate>();
         }
+    }
 
     }
-}
+
