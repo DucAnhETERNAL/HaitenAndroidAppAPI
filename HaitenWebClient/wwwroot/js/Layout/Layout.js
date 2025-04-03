@@ -7,11 +7,12 @@ document.addEventListener("DOMContentLoaded", function () {
         ApiService.get("google-login/profile", {}, { Authorization: `Bearer ${jwtToken}` })
             .then(response => {
                 // Lấy thông tin người dùng từ phản hồi
+                const userId = response.userId;
                 const userName = response.userName;
                 const role = response.role;
-                const userId = response.userId;
                 localStorage.setItem("userId", userId);
                 localStorage.setItem("userName", userName);
+
 
 
 
@@ -89,5 +90,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const logoutButton = document.getElementById("logoutButton");
     if (logoutButton) {
         logoutButton.addEventListener("click", handleLogout);
+    }
+
+    const payButton = document.getElementById("paybutton");
+    if (payButton) {
+        payButton.addEventListener("click", function () {
+            // Redirect to payment page when "Đăng ký hội viên" button is clicked
+            window.location.href = "Payment/Payments";  // Đảm bảo URL này là đúng với route thanh toán của bạn
+        });
     }
 });
